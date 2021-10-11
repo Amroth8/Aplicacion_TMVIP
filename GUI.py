@@ -3,7 +3,7 @@ from tkinter import *
 #raiz principal
 root = Tk()
 root.title("Todo Market VIP")
-root.iconbitmap("img/Logo.ico")
+#root.iconbitmap("img/Logo.ico")
 root.config(bg="#000")
 
 #frame opciones
