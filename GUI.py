@@ -37,93 +37,243 @@ root.config(bg="#000")
 
 #frame opciones
 opcionesFrame = Frame()
-opcionesFrame.pack(fill="both", expand="True")
+opcionesFrame.pack(
+    fill="both", 
+    expand="True"
+)
 opcionesFrame.config(bg="#E5E5E5")
 opcionesFrame.config(width="650", height="350")
 
 #frame ventas
 ventasFrame = Frame(opcionesFrame)
-ventasFrame.config(bg="#f5f5dc", width=550, height=460)
-ventasFrame.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
+ventasFrame.config(
+    bg="#f5f5dc", 
+    width=550, 
+    height=460
+)
+ventasFrame.grid(
+    row=0, 
+    rowspan=100, 
+    column=1, 
+    columnspan=100, 
+    sticky=NSEW
+)
 ventasFrame.grid_propagate(False)
+
+
     #widgets dentro de ventas
         #buscar y anadir producto
             #label
-buscarLabel = Label(ventasFrame, text="Buscar producto")
-buscarLabel.grid(row=0, column=0, sticky=NSEW)
+buscarLabel_ventas = Label(ventasFrame, text="Buscar producto")
+buscarLabel_ventas.grid(
+    row=0, 
+    column=0, 
+    sticky=NSEW
+)
             #cuadro
-buscarCuadro = Entry(ventasFrame)
-buscarCuadro.grid(row=1, column=0, sticky=NSEW)
+buscarCuadro_ventas = Entry(ventasFrame)
+buscarCuadro_ventas.grid(
+    row=1, 
+    column=0, 
+    sticky=NSEW
+)
             #boton
-buscarBoton = Button(ventasFrame, text="Buscar") #, command = funcion para insertar frame 
-buscarBoton.grid(row=1,column=1,sticky=NSEW)
-buscarBoton.config(cursor="hand2")
-buscarBoton.config(pady=1, padx=4)
-buscarBoton.config(bd=2)
-buscarBoton.config(overrelief="raised")
+buscarBoton_ventas = Button(ventasFrame, text="Buscar") #, command = funcion para insertar frame 
+buscarBoton_ventas.grid(
+    row=1,
+    column=1,
+    sticky=NSEW
+)
+buscarBoton_ventas.config(
+    cursor="hand2",
+    pady=1, 
+    padx=4,
+    bd=2,
+    overrelief="raised"
+)
+
             #lista de la busqueda
-listaBusqFrame = Frame(ventasFrame)
-listaBusqFrame.config(bd=3, relief=SUNKEN, width=150, height=400)
-listaBusqFrame.grid(row=2, column=0, columnspan=2, sticky=NSEW)
-listaBusqFrame.propagate(0)
+listaBusqFrame_ventas = Frame(ventasFrame)
+listaBusqFrame_ventas.config(
+    bd=3, 
+    relief=SUNKEN, 
+    width=150, 
+    height=400
+)
+listaBusqFrame_ventas.grid(
+    row=2, 
+    column=0, 
+    columnspan=2, 
+    sticky=NSEW
+)
+listaBusqFrame_ventas.propagate(0)
+
             #scroll para la lista
-scrollBusqueda = ttk.Scrollbar(listaBusqFrame)
-scrollBusqueda.pack(side=RIGHT, fill=Y)
+scrollBusqueda_ventas = ttk.Scrollbar(listaBusqFrame_ventas)
+scrollBusqueda_ventas.pack(side=RIGHT, fill=Y)
             ##bucle para mostrar toda la busqueda
             #marcar los productos
 
         #lista de productos de la venta
-buscarLabel = Label(ventasFrame, text="Lista de Productos")
-buscarLabel.grid(row=0, column=2, sticky=NSEW)
+buscarLabel_ventas = Label(ventasFrame, text="Lista de Productos")
+buscarLabel_ventas.grid(
+    row=0, 
+    column=2, 
+    sticky=NSEW
+)
 
 #frame de revisar ventas
 revVentasFrame = Frame(opcionesFrame)
-revVentasFrame.config(bg="#f5f5dc", width=550, height=460)
+revVentasFrame.config(
+    bg="#f5f5dc", 
+    width=550, 
+    height=460
+)
 revVentasFrame.grid_propagate(False)
-#revVentasFrame.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
-    #widgets dentro de ventas
-        #buscar y anadir producto
             #label
-buscarVentasLabel = Label(revVentasFrame, text="Revisar Ventas")
-buscarVentasLabel.grid(row=0, column=0, sticky=NSEW)
+buscarVentasLabel_revVentas = Label(revVentasFrame, text="Revisar Ventas")
+buscarVentasLabel_revVentas.grid(
+    row=0, 
+    column=0, 
+    sticky=NSEW
+)
             #cuadro
-buscarCuadro = Entry(revVentasFrame)
-buscarCuadro.grid(row=1, column=0, columnspan=2, sticky=NSEW)
+buscarCuadro_revVentas = Entry(revVentasFrame)
+buscarCuadro_revVentas.grid(
+    row=1, 
+    column=0,
+    columnspan=2, 
+    sticky=NSEW
+)
             #boton
-buscarBoton = Button(revVentasFrame, text="Buscar") #, command = funcion para insertar frame 
-buscarBoton.grid(row=1,column=1,sticky=NSEW)
-buscarBoton.config(cursor="hand2")
-buscarBoton.config(pady=1, padx=4)
-buscarBoton.config(bd=2)
-buscarBoton.config(overrelief="raised")
+buscarBoton_revVentas = Button(revVentasFrame, text="Buscar") #, command = funcion para insertar frame 
+buscarBoton_revVentas.grid(
+    row=1,
+    column=1,
+    sticky=NSEW
+)
+buscarBoton_revVentas.config(
+    cursor="hand2",
+    pady=1, 
+    padx=4,
+    bd=2,
+    overrelief="raised"
+)
+            #radio boton para las opciones de informe de ventas
+rb_semanal = Radiobutton(
+    revVentasFrame, 
+    text="Informe semanal"
+).grid(
+    row=2,
+    column=0,
+    sticky=NSEW
+)
+rb_mensual = Radiobutton(
+    revVentasFrame, 
+    text="Informe mensual"
+).grid(
+    row=3,
+    column=0,
+    sticky=NSEW
+)
+rb_masVendidos = Radiobutton(
+    revVentasFrame, 
+    text="Informe de los mas vendidos"
+).grid(
+    row=4,
+    column=0,
+    sticky=NSEW
+)
+rb_menosVendidos = Radiobutton(
+    revVentasFrame, 
+    text="Informe de los menos vendidos"
+).grid(
+    row=5,
+    column=0,
+    sticky=NSEW
+)
             #lista de la busqueda
-listaBusqFrame = Frame(revVentasFrame)
-listaBusqFrame.config(bd=3, relief=SUNKEN, width=150, height=400)
-listaBusqFrame.grid(row=2, column=0, columnspan=2, sticky=NSEW)
-listaBusqFrame.propagate(0)
+listaBusqFrame_revVentas = Frame(revVentasFrame)
+listaBusqFrame_revVentas.config(
+    bd=3, 
+    relief=SUNKEN, 
+    width=250, 
+    height=300
+)
+listaBusqFrame_revVentas.grid(
+    padx=7,
+    pady=1,
+    row=1, 
+    column=3, 
+    rowspan=20, 
+    columnspan=2, 
+    sticky=NSEW
+)
+listaBusqFrame_revVentas.propagate(0)
             #scroll para la lista
+            #boton para expotar datos de la venta
+exportarBoton_revVentas = Button(revVentasFrame, text="Exportar") #, command = funcion para insertar frame 
+exportarBoton_revVentas.grid(
+    row=21,
+    column=4,
+    sticky=NSEW
+)
+exportarBoton_revVentas.config(
+    cursor="hand2",
+    pady=1, 
+    padx=4,
+    bd=2,
+    overrelief="raised"
+)
+
 
 #frame de actualizar datos
 actDatosFrame = Frame(opcionesFrame)
-actDatosFrame.config(bg="#f5f5dc", width=550, height=460)
+actDatosFrame.config(
+    bg="#f5f5dc", 
+    width=550, 
+    height=460
+)
 actDatosFrame.grid_propagate(False)
     #label
-buscarVentasLabel = Label(actDatosFrame, text="Producto a actualizar")
-buscarVentasLabel.grid(row=0, column=0, sticky=NSEW)
+buscarVentasLabel_actDatos = Label(actDatosFrame, text="Producto a actualizar")
+buscarVentasLabel_actDatos.grid(
+    row=0, 
+    column=0, 
+    sticky=NSEW
+)
     #cuadro
-buscarCuadro = Entry(actDatosFrame)
-buscarCuadro.grid(row=1, column=0, columnspan=2, sticky=NSEW)
+buscarCuadro_actDatos = Entry(actDatosFrame)
+buscarCuadro_actDatos.grid(
+    row=1, 
+    column=0,
+    columnspan=2, 
+    sticky=NSEW
+)
 
-#frame de actualizar datos
+#frame de Ver datos
 verDatosFrame = Frame(opcionesFrame)
-verDatosFrame.config(bg="#f5f5dc", width=550, height=460)
+verDatosFrame.config(
+    bg="#f5f5dc", 
+    width=550, 
+    height=460
+)
 verDatosFrame.grid_propagate(False)
     #label
-buscarVentasLabel = Label(verDatosFrame, text="Producto a Visualizar")
-buscarVentasLabel.grid(row=0, column=0, sticky=NSEW)
+buscarVentasLabel_verDatos = Label(verDatosFrame, text="Producto a Visualizar")
+buscarVentasLabel_verDatos.grid(
+    row=0, 
+    column=0, 
+    sticky=NSEW
+)
     #cuadro
-buscarCuadro = Entry(verDatosFrame)
-buscarCuadro.grid(row=1, column=0, columnspan=2, sticky=NSEW)
+buscarCuadro_verDatos = Entry(verDatosFrame)
+buscarCuadro_verDatos.grid(
+    row=1, 
+    column=0, 
+    columnspan=2, 
+    sticky=NSEW
+)
 
 #botones opciones principales
     #boton ventas
