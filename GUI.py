@@ -2,32 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image
 from PIL import ImageTk
-
-def cambiarFrame(frame,revVentas,ventas,actDatos,verDatos):
-    if frame == "ventas":
-        verDatos.grid_remove()
-        actDatos.grid_remove()
-        revVentas.grid_remove()
-        ventas.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
-        ventas.grid_propagate(False)
-    if frame == "revVentas":
-        verDatos.grid_remove()
-        actDatos.grid_remove()
-        ventas.grid_remove()
-        revVentas.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
-        revVentas.grid_propagate(False)
-    if frame == "actDatos":
-        verDatos.grid_remove()
-        ventas.grid_remove()
-        revVentas.grid_remove()
-        actDatos.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
-        ventas.grid_propagate(False)
-    if frame == "verDatos":
-        ventas.grid_remove()
-        revVentas.grid_remove()
-        actDatos.grid_remove()
-        verDatos.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
-        ventas.grid_propagate(False)
+import Func
 
 #raiz principal
 root = Tk()
@@ -280,7 +255,7 @@ buscarCuadro_verDatos.grid(
 botonVentas = Button(
     opcionesFrame, 
     text="Administrar ventas", 
-    command=lambda: cambiarFrame("ventas",revVentasFrame,ventasFrame,actDatosFrame,verDatosFrame)
+    command=lambda: Func.cambiarFrame("ventas",revVentasFrame,ventasFrame,actDatosFrame,verDatosFrame)
 )
 botonVentas.grid(row=0,column=0,sticky=NSEW)
 botonVentas.config(cursor="hand2")
@@ -292,7 +267,7 @@ botonVentas.config(overrelief="raised")
 botonRevVentas = Button(
     opcionesFrame, 
     text="Revisar Ventas", 
-    command=lambda: cambiarFrame("revVentas",revVentasFrame,ventasFrame,actDatosFrame,verDatosFrame)
+    command=lambda: Func.cambiarFrame("revVentas",revVentasFrame,ventasFrame,actDatosFrame,verDatosFrame)
 )
 botonRevVentas.grid(row=1,column=0,sticky=NSEW)
 botonRevVentas.config(cursor="hand2")
@@ -304,7 +279,7 @@ botonRevVentas.config(overrelief="raised")
 botonActualizarBBDD = Button(
     opcionesFrame, 
     text="Actualizar datos de productos", 
-    command=lambda: cambiarFrame("actDatos",revVentasFrame,ventasFrame,actDatosFrame,verDatosFrame)
+    command=lambda: Func.cambiarFrame("actDatos",revVentasFrame,ventasFrame,actDatosFrame,verDatosFrame)
 )
 botonActualizarBBDD.grid(row=2,column=0,sticky=NSEW)
 botonActualizarBBDD.config(cursor="hand2")
@@ -316,7 +291,7 @@ botonActualizarBBDD.config(overrelief="raised")
 botonVisualBBDD = Button(
     opcionesFrame, 
     text="Visualizar datos de productos", 
-    command=lambda: cambiarFrame("verDatos",revVentasFrame,ventasFrame,actDatosFrame,verDatosFrame)
+    command=lambda: Func.cambiarFrame("verDatos",revVentasFrame,ventasFrame,actDatosFrame,verDatosFrame)
 )
 botonVisualBBDD.grid(row=3,column=0,sticky=NSEW)
 botonVisualBBDD.config(cursor="hand2")
