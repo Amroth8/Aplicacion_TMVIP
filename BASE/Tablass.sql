@@ -11,12 +11,13 @@ CREATE TABLE Producto (
     cant int,
     cod_bar varchar(50),
     prec int,
-    id_marc varchar (100)
+    id_marc int
 );
+
 
 CREATE TABLE Clasificacion_Productos (
 	id_cat int not null,
-    id_prod varchar(100) not null
+    id_prod int not null
 );
 
 CREATE TABLE Marca (
@@ -67,4 +68,9 @@ CREATE TABLE Stock_bodega(
 	id_prod int,
     id_bod int,
     cant int
+);
+
+CREATE TABLE Catalogo_proveedores (
+	rut varchar(100) not null,
+    id_prod int
 );
