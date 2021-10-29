@@ -440,7 +440,7 @@ rb_semanal_verStock = Radiobutton(
 )
 rb_mensual_verStock = Radiobutton(
     verStockFrame, 
-    text="Stock en Tiendo"
+    text="Stock en Tienda"
 ).grid(
     row=2,
     column=0,
