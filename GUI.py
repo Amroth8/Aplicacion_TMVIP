@@ -35,25 +35,37 @@ ventasFrame.grid(
     columnspan=100, 
     sticky=NSEW
 )
-ventasFrame.grid_propagate(False)
+ventasFrame.grid_propagate(False) 
+    #label
+buscarLabel_ventas = Label(ventasFrame, text="Realizar Venta")
+buscarLabel_ventas.grid(
+    row=0, 
+    column=0, 
+    columnspan=6,
+    sticky=NSEW
+)
     #label
 buscarLabel_ventas = Label(ventasFrame, text="Buscar producto")
 buscarLabel_ventas.grid(
-    row=0, 
+    row=1, 
     column=0, 
     sticky=NSEW
 )
     #cuadro
 buscarCuadro_ventas = Entry(ventasFrame)
 buscarCuadro_ventas.grid(
-    row=1, 
+    row=2, 
     column=0, 
     sticky=NSEW
 )
     #boton
-buscarBoton_ventas = Button(ventasFrame, text="Buscar") #, command = funcion para insertar frame 
+buscarBoton_ventas = Button(
+    ventasFrame, 
+    text="Buscar",
+    command=lambda:Func.buscar(buscarCuadro_ventas.get())
+) #, command = funcion para insertar frame 
 buscarBoton_ventas.grid(
-    row=1,
+    row=2,
     column=1,
     sticky=NSEW
 )
@@ -73,7 +85,7 @@ listaBusqFrame_ventas.config(
     height=400
 )
 listaBusqFrame_ventas.grid(
-    row=2, 
+    row=3, 
     column=0, 
     columnspan=2, 
     sticky=NSEW
@@ -87,7 +99,7 @@ scrollBusqueda_ventas.pack(side=RIGHT, fill=Y)
     #lista de productos de la venta
 listaLabel_ventas = Label(ventasFrame, text="Lista de Productos")
 listaLabel_ventas.grid(
-    row=0, 
+    row=1, 
     column=2, 
     sticky=NSEW
 )
@@ -207,7 +219,7 @@ listaBusqFrame_revVentas.propagate(0)
     #boton para expotar datos de la venta
 exportarBoton_revVentas = Button(revVentasFrame, text="Exportar") #, command = funcion para insertar frame 
 exportarBoton_revVentas.grid(
-    row=21,
+    row=28,
     column=4,
     sticky=NSEW
 )
@@ -244,7 +256,11 @@ buscarCuadro_actDatos.grid(
     sticky=NSEW
 )
     #boton buscar
-buscarBoton_actDatos = Button(actDatosFrame, text="Buscar")
+buscarBoton_actDatos = Button(
+    actDatosFrame, 
+    text="Buscar",
+    command=lambda:Func.buscar(buscarCuadro_actDatos.get())
+)
 buscarBoton_actDatos.grid(
     row=1,
     column=3,
@@ -254,68 +270,72 @@ buscarBoton_actDatos.grid(
 actualizarLabel_actDatos = Label(actDatosFrame, text="Actualizar Producto")
 actualizarLabel_actDatos.grid(
     row=0, 
-    column=3, 
+    column=4, 
     sticky=NSEW
 )
     #labels
 labelNombre_actDatos = Label(actDatosFrame, text="Nombre")
 labelNombre_actDatos.grid(
     row=2, 
-    column=3, 
+    column=4, 
     sticky=NSEW
 )
 laberCod_actDatos = Label(actDatosFrame, text="Codigo de Barra")
 laberCod_actDatos.grid(
     row=3, 
-    column=3, 
+    column=4, 
     sticky=NSEW
 )
 labelPrec_actDatos = Label(actDatosFrame, text="Precio")
 labelPrec_actDatos.grid(
     row=4, 
-    column=3, 
+    column=4, 
     sticky=NSEW
 )
 labelMarca_actDatos = Label(actDatosFrame, text="Marca")
 labelMarca_actDatos.grid(
     row=5, 
-    column=3, 
+    column=4, 
     sticky=NSEW
 )
     #cuadros
 cuadroNombre_actDatos = Entry(actDatosFrame)
 cuadroNombre_actDatos.grid(
     row=2, 
-    column=4,
+    column=5,
     columnspan=2, 
     sticky=NSEW
 )
 cuadroCod_actDatos = Entry(actDatosFrame)
 cuadroCod_actDatos.grid(
     row=3, 
-    column=4,
+    column=5,
     columnspan=2, 
     sticky=NSEW
 )
 cuadroPrec_actDatos = Entry(actDatosFrame)
 cuadroPrec_actDatos.grid(
     row=4, 
-    column=4,
+    column=5,
     columnspan=2, 
     sticky=NSEW
 )
 cuadroMarca_actDatos = Entry(actDatosFrame)
 cuadroMarca_actDatos.grid(
     row=5, 
-    column=4,
+    column=5,
     columnspan=2, 
     sticky=NSEW
 )
     #boton actualizar
-actualizarBoton_actDatos = Button(actDatosFrame, text="Actualizar")
+actualizarBoton_actDatos = Button(
+    actDatosFrame, 
+    text="Actualizar",
+    command=lambda:Func.actualizar_datos(cuadroNombre_actDatos.get(),cuadroCod_actDatos.get(),cuadroPrec_actDatos.get(),cuadroMarca_actDatos.get())
+)
 actualizarBoton_actDatos.grid(
     row=6,
-    column=4,
+    column=5,
     sticky=NSEW
 )
     #label
@@ -406,7 +426,11 @@ cuadroMarca_añadirProd.grid(
     sticky=NSEW
 )
     #boton actualizar
-actualizarBoton_añadirProd = Button(añadirProdFrame, text="Añadir")
+actualizarBoton_añadirProd = Button(
+    añadirProdFrame, 
+    text="Añadir",
+    command=lambda:Func.nuevos_datos(cuadroNombre_añadirProd.get(),cuadroCod_añadirProd.get(),cuadroPrec_añadirProd.get(),cuadroMarca_añadirProd.get())
+)
 actualizarBoton_añadirProd.grid(
     row=6,
     column=1,
@@ -446,7 +470,11 @@ buscarCuadro_verStock.grid(
     sticky=NSEW
 )
     #boton
-buscarBoton_verStock = Button(verStockFrame, text="Buscar") #, command = funcion para insertar frame 
+buscarBoton_verStock = Button(
+    verStockFrame, 
+    text="Buscar",
+    command=lambda:Func.buscar(buscarCuadro_verStock.get())
+)
 buscarBoton_verStock.grid(
     row=5,
     column=1,
@@ -543,7 +571,11 @@ buscarCuadro_actStock.grid(
     sticky=NSEW
 )
     #boton buscar
-buscarBoton_actStock = Button(actStockFrame, text="Buscar:")
+buscarBoton_actStock = Button(
+    actStockFrame, 
+    text="Buscar:",
+    command=lambda:Func.buscar(buscarCuadro_actStock.get())
+)
 buscarBoton_actStock.grid(
     row=1,
     column=3,
@@ -631,7 +663,11 @@ cuadroCant_actStock.grid(
     sticky=NSEW
 )
     #boton actualizar
-actualizarBoton_actStock = Button(actStockFrame, text="Actualizar")
+actualizarBoton_actStock = Button(
+    actStockFrame, 
+    text="Actualizar",
+    command=lambda:Func.actualizar_stock(cuadroCant_actStock.get())
+)
 actualizarBoton_actStock.grid(
     row=6,
     column=4,

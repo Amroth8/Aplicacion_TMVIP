@@ -49,3 +49,15 @@ def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
         actDatos.grid_remove()
         actStock.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
         actStock.grid_propagate(False)
+
+def buscar(text):
+    print(text)
+
+def actualizar_datos(nombre,codigo,precio,marca):
+    print(nombre,' ',codigo,' ',precio,' ',marca)
+
+def nuevos_datos(nombre,codigo,precio,marca):
+    print(nombre,' ',codigo,' ',precio,' ',marca)
+
+def actualizar_stock(cant):
+    print(cant)
