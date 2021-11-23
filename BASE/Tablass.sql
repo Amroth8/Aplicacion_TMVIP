@@ -1,15 +1,15 @@
 CREATE DATABASE TODOMARKET_VIP;
 
 CREATE TABLE Categoria (
-	id_cat int not null,
+	id_cat int not null auto_increment,
     nom varchar(100)
 );
 
 CREATE TABLE Producto (
-	id_prod int not null,
+	id_prod int not null auto_increment,
     nom varchar(100),
     cant int,
-    cod_bar varchar(50),
+    cod_bar int,
     prec int,
     id_marc int
 );
@@ -21,7 +21,7 @@ CREATE TABLE Clasificacion_Productos (
 );
 
 CREATE TABLE Marca (
-	id_marc int not null,
+	id_marc int not null auto_increment,
     nom varchar(100)
 );
 
