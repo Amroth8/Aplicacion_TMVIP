@@ -93,7 +93,7 @@ listaLabel_ventas.grid(
 )
 
 
-#frame de revisar ventas
+#frame de informe de ventas
 revVentasFrame = Frame(opcionesFrame)
 revVentasFrame.config(
     bg="#f5f5dc", 
@@ -102,25 +102,47 @@ revVentasFrame.config(
 )
 revVentasFrame.grid_propagate(False)
     #label
-buscarVentasLabel_revVentas = Label(revVentasFrame, text="Revisar Ventas")
+buscarVentasLabel_revVentas = Label(revVentasFrame, text="Informe de Ventas")
 buscarVentasLabel_revVentas.grid(
     row=0, 
+    column=0,
+    columnspan=6, 
+    sticky=NSEW
+)
+    #label
+tipoInfVentasLabel_revVentas = Label(revVentasFrame, text="Seleccione Tipo de Informe")
+tipoInfVentasLabel_revVentas.grid(
+    row=1, 
+    column=0, 
+    sticky=NSEW
+)
+    #label
+tipoInfVentasLabel_revVentas = Label(revVentasFrame, text="Seleccione Periodo de Tiempo")
+tipoInfVentasLabel_revVentas.grid(
+    row=7, 
     column=0, 
     sticky=NSEW
 )
     #cuadro
 buscarCuadro_revVentas = Entry(revVentasFrame)
 buscarCuadro_revVentas.grid(
-    row=1, 
+    row=8, 
     column=0,
     columnspan=2, 
     sticky=NSEW
 )
     #boton
-buscarBoton_revVentas = Button(revVentasFrame, text="Buscar") #, command = funcion para insertar frame 
+buscarBoton_revVentas = Button(revVentasFrame, text="Generar") #, command = funcion para insertar frame 
 buscarBoton_revVentas.grid(
-    row=1,
+    row=8,
     column=1,
+    sticky=NSEW
+)
+    #label
+tipoInfVentasLabel_revVentas = Label(revVentasFrame, text="Seleccione Orden")
+tipoInfVentasLabel_revVentas.grid(
+    row=4, 
+    column=0, 
     sticky=NSEW
 )
 buscarBoton_revVentas.config(
@@ -149,17 +171,17 @@ rb_mensual = Radiobutton(
 )
 rb_masVendidos = Radiobutton(
     revVentasFrame, 
-    text="Informe de los mas vendidos"
+    text="Mas vendidos"
 ).grid(
-    row=4,
+    row=5,
     column=0,
     sticky=NSEW
 )
 rb_menosVendidos = Radiobutton(
     revVentasFrame, 
-    text="Informe de los menos vendidos"
+    text="Menos vendidos"
 ).grid(
-    row=5,
+    row=6,
     column=0,
     sticky=NSEW
 )
@@ -174,7 +196,7 @@ listaBusqFrame_revVentas.config(
 listaBusqFrame_revVentas.grid(
     padx=7,
     pady=1,
-    row=1, 
+    row=2, 
     column=3, 
     rowspan=20, 
     columnspan=2, 
@@ -405,12 +427,20 @@ buscarVentasLabel_verStock = Label(verStockFrame, text="Ver Stock")
 buscarVentasLabel_verStock.grid(
     row=0, 
     column=0, 
+    columnspan=6,
+    sticky=NSEW
+)
+    #label
+buscarVentasLabel_verStock = Label(verStockFrame, text="Seleccionar Stock a Mostrar")
+buscarVentasLabel_verStock.grid(
+    row=1, 
+    column=0, 
     sticky=NSEW
 )
     #cuadro
 buscarCuadro_verStock = Entry(verStockFrame)
 buscarCuadro_verStock.grid(
-    row=4, 
+    row=5, 
     column=0,
     columnspan=2, 
     sticky=NSEW
@@ -418,7 +448,7 @@ buscarCuadro_verStock.grid(
     #boton
 buscarBoton_verStock = Button(verStockFrame, text="Buscar") #, command = funcion para insertar frame 
 buscarBoton_verStock.grid(
-    row=4,
+    row=5,
     column=1,
     sticky=NSEW
 )
@@ -434,7 +464,7 @@ rb_semanal_verStock = Radiobutton(
     verStockFrame, 
     text="Stock de Producto"
 ).grid(
-    row=1,
+    row=2,
     column=0,
     sticky=NSEW
 )
@@ -442,7 +472,7 @@ rb_mensual_verStock = Radiobutton(
     verStockFrame, 
     text="Stock en Tienda"
 ).grid(
-    row=2,
+    row=3,
     column=0,
     sticky=NSEW
 )
@@ -450,7 +480,7 @@ rb_masVendido_verStock = Radiobutton(
     verStockFrame, 
     text="Stock en Bodega"
 ).grid(
-    row=3,
+    row=4,
     column=0,
     sticky=NSEW
 )
@@ -465,7 +495,7 @@ listaBusqFrame_verStock.config(
 listaBusqFrame_verStock.grid(
     padx=7,
     pady=1,
-    row=1, 
+    row=2, 
     column=3, 
     rowspan=20, 
     columnspan=2, 
