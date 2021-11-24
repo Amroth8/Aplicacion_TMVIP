@@ -4,12 +4,13 @@ from PIL import Image
 from PIL import ImageTk
 import Func
 
+Lista_Productos = ["Producto1","Producto2","Producto3","Producto4","Producto5","Producto6"]
+
 #raiz principal
 root = Tk()
 root.title("Todo Market VIP")
 root.iconbitmap("img/Logo.ico")
 root.config(bg="#000")
-
 
 #frame opciones
 opcionesFrame = Frame()
@@ -136,15 +137,21 @@ tipoInfVentasLabel_revVentas.grid(
     sticky=NSEW
 )
     #cuadro
-buscarCuadro_revVentas = Entry(revVentasFrame)
+buscarCuadro_revVentas = ttk.Combobox(
+    revVentasFrame,
+    values=Lista_Productos
+)
 buscarCuadro_revVentas.grid(
     row=8, 
     column=0,
-    columnspan=2, 
+    columnspan=1, 
     sticky=NSEW
 )
     #boton
-buscarBoton_revVentas = Button(revVentasFrame, text="Generar") #, command = funcion para insertar frame 
+buscarBoton_revVentas = Button(
+    revVentasFrame, 
+    text="Buscar"
+)
 buscarBoton_revVentas.grid(
     row=8,
     column=1,
