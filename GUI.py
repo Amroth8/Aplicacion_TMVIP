@@ -4,7 +4,7 @@ from PIL import Image
 from PIL import ImageTk
 import Func
 
-Lista_Productos = ["Producto1","Producto2","Producto3","Producto4","Producto5","Producto6"]
+Lista_Productos = ["Producto1","Producto2","Producto3","Mroducto4","Producto5","Producto6"]
 
 #raiz principal
 root = Tk()
@@ -150,7 +150,8 @@ buscarCuadro_revVentas.grid(
     #boton
 buscarBoton_revVentas = Button(
     revVentasFrame, 
-    text="Buscar"
+    text="Buscar",
+    command=lambda *args :Func.actualizarLista(buscarCuadro_revVentas,buscarCuadro_revVentas.get())
 )
 buscarBoton_revVentas.grid(
     row=8,

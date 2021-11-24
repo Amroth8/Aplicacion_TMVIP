@@ -61,3 +61,8 @@ def nuevos_datos(nombre,codigo,precio,marca):
 
 def actualizar_stock(cant):
     print(cant)
+
+def actualizarLista(buscarCuadro_revVentas,busqueda):
+    lista=list(buscarCuadro_revVentas['values'])
+    lista.append(busqueda)
+    buscarCuadro_revVentas['values']=tuple(lista)
