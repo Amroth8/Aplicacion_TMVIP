@@ -59,10 +59,23 @@ def actualizar_datos(nombre,codigo,precio,marca):
 def nuevos_datos(nombre,codigo,precio,marca):
     print(nombre,' ',codigo,' ',precio,' ',marca)
 
-def actualizar_stock(cant):
+def actualizar_stock(cant,opcion):
     print(cant)
 
 def actualizarLista(buscarCuadro_revVentas,busqueda):
+    lista=list(buscarCuadro_revVentas['values'])
+    lista.append(busqueda)
+    buscarCuadro_revVentas['values']=tuple(lista)
+
+def actualizarListaFechas(buscarCuadro_revVentas,busqueda,opcionFecha,opcionOrden):
+    lista=list(buscarCuadro_revVentas['values'])
+    lista.append(opcionFecha)
+    buscarCuadro_revVentas['values']=tuple(lista)
+
+def MostrarStock(text):
+    print(text)
+
+def actualizarListaStock(buscarCuadro_revVentas,busqueda,opcionStock):
     lista=list(buscarCuadro_revVentas['values'])
     lista.append(busqueda)
     buscarCuadro_revVentas['values']=tuple(lista)

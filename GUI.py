@@ -5,6 +5,8 @@ from PIL import ImageTk
 import Func
 
 Lista_Productos = ["Producto1","Producto2","Producto3","Mroducto4","Producto5","Producto6"]
+Lista_Ver_Stock = []
+Fechas = []
 
 #raiz principal
 root = Tk()
@@ -136,10 +138,55 @@ tipoInfVentasLabel_revVentas.grid(
     column=0, 
     sticky=NSEW
 )
+opcionFecha = StringVar()
+opcionFecha.set(None)
+opcionOrden = StringVar()
+opcionOrden.set(None)
+    #radio boton para las opciones de informe de ventas
+rb_semanal = Radiobutton(
+    revVentasFrame, 
+    text="Informe semanal",
+    value='Semanal',
+    variable=opcionFecha
+).grid(
+    row=2,
+    column=0,
+    sticky=NSEW
+)
+rb_mensual = Radiobutton(
+    revVentasFrame, 
+    text="Informe mensual",
+    value='Mensual',
+    variable=opcionFecha
+).grid(
+    row=3,
+    column=0,
+    sticky=NSEW
+)
+rb_masVendidos = Radiobutton(
+    revVentasFrame, 
+    text="Mas vendidos",
+    value='Mas',
+    variable=opcionOrden
+).grid(
+    row=5,
+    column=0,
+    sticky=NSEW
+)
+rb_menosVendidos = Radiobutton(
+    revVentasFrame, 
+    text="Menos vendidos",
+    value='Menos',
+    variable=opcionOrden
+).grid(
+    row=6,
+    column=0,
+    sticky=NSEW
+)
     #cuadro
 buscarCuadro_revVentas = ttk.Combobox(
     revVentasFrame,
-    values=Lista_Productos
+    values=Fechas
 )
 buscarCuadro_revVentas.grid(
     row=8, 
@@ -151,7 +198,7 @@ buscarCuadro_revVentas.grid(
 buscarBoton_revVentas = Button(
     revVentasFrame, 
     text="Buscar",
-    command=lambda *args :Func.actualizarLista(buscarCuadro_revVentas,buscarCuadro_revVentas.get())
+    command=lambda *args :Func.actualizarListaFechas(buscarCuadro_revVentas,buscarCuadro_revVentas.get(),opcionFecha.get(),opcionOrden.get())
 )
 buscarBoton_revVentas.grid(
     row=8,
@@ -171,39 +218,6 @@ buscarBoton_revVentas.config(
     padx=4,
     bd=2,
     overrelief="raised"
-)
-    #radio boton para las opciones de informe de ventas
-rb_semanal = Radiobutton(
-    revVentasFrame, 
-    text="Informe semanal"
-).grid(
-    row=2,
-    column=0,
-    sticky=NSEW
-)
-rb_mensual = Radiobutton(
-    revVentasFrame, 
-    text="Informe mensual"
-).grid(
-    row=3,
-    column=0,
-    sticky=NSEW
-)
-rb_masVendidos = Radiobutton(
-    revVentasFrame, 
-    text="Mas vendidos"
-).grid(
-    row=5,
-    column=0,
-    sticky=NSEW
-)
-rb_menosVendidos = Radiobutton(
-    revVentasFrame, 
-    text="Menos vendidos"
-).grid(
-    row=6,
-    column=0,
-    sticky=NSEW
 )
     #lista de la busqueda
 listaBusqFrame_revVentas = Frame(revVentasFrame)
@@ -256,18 +270,20 @@ buscarProdLabel_actDatos.grid(
     sticky=NSEW
 )
     #cuadro
-buscarCuadro_actDatos = Entry(actDatosFrame)
+buscarCuadro_actDatos = ttk.Combobox(
+    actDatosFrame,
+    values=Lista_Productos
+)
 buscarCuadro_actDatos.grid(
     row=1, 
-    column=0,
-    columnspan=2, 
+    column=0, 
     sticky=NSEW
 )
     #boton buscar
 buscarBoton_actDatos = Button(
     actDatosFrame, 
     text="Buscar",
-    command=lambda:Func.buscar(buscarCuadro_actDatos.get())
+    command=lambda *args :Func.actualizarLista(buscarCuadro_actDatos,buscarCuadro_actDatos.get())
 )
 buscarBoton_actDatos.grid(
     row=1,
@@ -469,22 +485,68 @@ buscarVentasLabel_verStock.grid(
     column=0, 
     sticky=NSEW
 )
+opcionesStock = StringVar()
+opcionesStock.set(None)
+    #radio boton para las opciones mostrar el stock
+rb_semanal_verStock = Radiobutton(
+    verStockFrame, 
+    text="Stock de Producto",
+    value='Producto',
+    variable=opcionesStock
+).grid(
+    row=2,
+    column=0,
+    sticky=NSEW
+)
+rb_mensual_verStock = Radiobutton(
+    verStockFrame, 
+    text="Stock en Tienda",
+    value='Tienda',
+    variable=opcionesStock
+).grid(
+    row=3,
+    column=0,
+    sticky=NSEW
+)
+rb_masVendido_verStock = Radiobutton(
+    verStockFrame, 
+    text="Stock en Bodega",
+    value='Bodega',
+    variable=opcionesStock
+).grid(
+    row=4,
+    column=0,
+    sticky=NSEW
+)
     #cuadro
-buscarCuadro_verStock = Entry(verStockFrame)
+buscarCuadro_verStock = ttk.Combobox(
+    verStockFrame,
+    values=Lista_Ver_Stock
+)
 buscarCuadro_verStock.grid(
     row=5, 
-    column=0,
-    columnspan=2, 
+    column=0, 
     sticky=NSEW
 )
     #boton
 buscarBoton_verStock = Button(
     verStockFrame, 
     text="Buscar",
-    command=lambda:Func.buscar(buscarCuadro_verStock.get())
+    command=lambda:Func.actualizarListaStock(buscarCuadro_verStock,buscarCuadro_verStock.get(),opcionesStock.get())
 )
 buscarBoton_verStock.grid(
     row=5,
+    column=1,
+    sticky=NSEW
+)
+    #boton
+mostrarBoton_verStock = Button(
+    verStockFrame, 
+    text="Generar",
+    command=lambda:Func.MostrarStock(buscarCuadro_verStock.get())
+)
+mostrarBoton_verStock.grid(
+    row=6,
     column=1,
     sticky=NSEW
 )
@@ -494,31 +556,6 @@ buscarBoton_verStock.config(
     padx=4,
     bd=2,
     overrelief="raised"
-)
-    #radio boton para las opciones mostrar el stock
-rb_semanal_verStock = Radiobutton(
-    verStockFrame, 
-    text="Stock de Producto"
-).grid(
-    row=2,
-    column=0,
-    sticky=NSEW
-)
-rb_mensual_verStock = Radiobutton(
-    verStockFrame, 
-    text="Stock en Tienda"
-).grid(
-    row=3,
-    column=0,
-    sticky=NSEW
-)
-rb_masVendido_verStock = Radiobutton(
-    verStockFrame, 
-    text="Stock en Bodega"
-).grid(
-    row=4,
-    column=0,
-    sticky=NSEW
 )
     #lista de la busqueda
 listaBusqFrame_verStock = Frame(verStockFrame)
@@ -542,7 +579,7 @@ listaBusqFrame_verStock.propagate(0)
     #boton para expotar datos de la venta
 exportarBoton_verStock = Button(verStockFrame, text="Exportar") #, command = funcion para insertar frame 
 exportarBoton_verStock.grid(
-    row=21,
+    row=23,
     column=4,
     sticky=NSEW
 )
@@ -571,18 +608,20 @@ buscarProdLabel_actStock.grid(
     sticky=NSEW
 )
     #cuadro
-buscarCuadro_actStock = Entry(actStockFrame)
+buscarCuadro_actStock = ttk.Combobox(
+    actStockFrame,
+    values=Lista_Productos
+)
 buscarCuadro_actStock.grid(
     row=1, 
-    column=0,
-    columnspan=2, 
+    column=0, 
     sticky=NSEW
 )
     #boton buscar
 buscarBoton_actStock = Button(
     actStockFrame, 
     text="Buscar:",
-    command=lambda:Func.buscar(buscarCuadro_actStock.get())
+    command=lambda *args :Func.actualizarLista(buscarCuadro_actStock,buscarCuadro_actStock.get())
 )
 buscarBoton_actStock.grid(
     row=1,
@@ -639,10 +678,14 @@ listaDatosLabel_actStock.grid(
     column=4, 
     sticky=NSEW
 )
+opcionesIngreso = StringVar()
+opcionesIngreso.set(None)
     #radio boton para las opciones de insertar el stock
 rb_semanal_verStock = Radiobutton(
     actStockFrame, 
-    text="Tienda"
+    text="Tienda",
+    value='Tienda',
+    variable=opcionesIngreso
 ).grid(
     row=2,
     column=4,
@@ -650,7 +693,9 @@ rb_semanal_verStock = Radiobutton(
 )
 rb_mensual_verStock = Radiobutton(
     actStockFrame, 
-    text="Bodega"
+    text="Bodega",
+    value='Bodega',
+    variable=opcionesIngreso
 ).grid(
     row=3,
     column=4,
@@ -674,7 +719,7 @@ cuadroCant_actStock.grid(
 actualizarBoton_actStock = Button(
     actStockFrame, 
     text="Actualizar",
-    command=lambda:Func.actualizar_stock(cuadroCant_actStock.get())
+    command=lambda:Func.actualizar_stock(cuadroCant_actStock.get(),opcionesIngreso.get())
 )
 actualizarBoton_actStock.grid(
     row=6,
