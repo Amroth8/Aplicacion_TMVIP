@@ -487,36 +487,35 @@ cuadroNombre_añadirProd = Entry(añadirProdFrame)
 cuadroNombre_añadirProd.grid(
     row=2, 
     column=1,
-    columnspan=2, 
     sticky=NSEW
 )
 cuadroCod_añadirProd = Entry(añadirProdFrame)
 cuadroCod_añadirProd.grid(
     row=3, 
     column=1,
-    columnspan=2, 
     sticky=NSEW
 )
 cuadroPrec_añadirProd = Entry(añadirProdFrame)
 cuadroPrec_añadirProd.grid(
     row=4, 
     column=1,
-    columnspan=2, 
     sticky=NSEW
 )
 cuadroMarca_añadirProd = Entry(añadirProdFrame)
 cuadroMarca_añadirProd.grid(
     row=5, 
     column=1,
-    columnspan=2, 
     sticky=NSEW
 )
+    #label error
+label_errorProd = Label(añadirProdFrame, text="Error", font="arial")
+label_errorProd.config(bg=back,fg='red')
     #boton actualizar
 actualizarBoton_añadirProd = Button(
     añadirProdFrame, 
     text="Añadir",
     bg=bt1,fg=btfg,
-    command=lambda:Func.nuevos_datos(cuadroNombre_añadirProd.get(),cuadroCod_añadirProd.get(),cuadroPrec_añadirProd.get(),cuadroMarca_añadirProd.get())
+    command=lambda:Func.añadir_productos(cuadroNombre_añadirProd,cuadroCod_añadirProd,cuadroPrec_añadirProd,cuadroMarca_añadirProd,label_errorProd)
 )
 actualizarBoton_añadirProd.grid(
     row=6,

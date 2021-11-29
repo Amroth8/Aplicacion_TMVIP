@@ -1,4 +1,5 @@
 from tkinter import *
+import CON_PROC
 
 def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
     if frame == "ventas":
@@ -56,8 +57,47 @@ def buscar(text):
 def actualizar_datos(nombre,codigo,precio,marca):
     print(nombre,' ',codigo,' ',precio,' ',marca)
 
+def verificar_datos(codigo,precio,label):
+    try:
+        codigo=int(codigo)
+        precio=int(precio)
+        if codigo<0:
+            label['text']='Error en el tipo de dato codigo barra'
+            label.grid(
+                row=6,
+                column=2,
+                stick=NSEW
+            )
+            return False
+        elif precio<=0:
+            label['text']='Error precio menor a 0'
+            label.grid(
+                row=6,
+                column=2,
+                stick=NSEW
+            )
+            return False
+    except:
+        label['text']='Error en el tipo de dato'
+        label.grid(
+            row=6,
+            column=2,
+            stick=NSEW
+        )
+        return False
+
+def añadir_productos(cuadroNombre,cuadroCod,cuadroPrec,cuadroMarca,label_errorProd):
+    label_errorProd.grid_remove()
+    if verificar_datos(cuadroCod.get(),cuadroPrec.get(),label_errorProd):
+        nuevos_datos(cuadroNombre.get(),cuadroCod.get(),cuadroPrec.get(),cuadroMarca.get())
+    cuadroMarca.delete(0,END)
+    cuadroCod.delete(0,END)
+    cuadroPrec.delete(0,END)
+    cuadroNombre.delete(0,END)
+
 def nuevos_datos(nombre,codigo,precio,marca):
-    print(nombre,' ',codigo,' ',precio,' ',marca)
+    datos=[nombre,0,codigo,precio]
+    CON_PROC.agregarprod(datos)
 
 def actualizar_stock(cant,opcion):
     print(cant)
