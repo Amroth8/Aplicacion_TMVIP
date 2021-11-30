@@ -85,6 +85,7 @@ def verificar_datos(codigo,precio,label):
             stick=NSEW
         )
         return False
+    return True
 
 def añadir_productos(cuadroNombre,cuadroCod,cuadroPrec,cuadroMarca,label_errorProd):
     label_errorProd.grid_remove()
@@ -103,9 +104,18 @@ def actualizar_stock(cant,opcion):
     print(cant)
 
 def actualizarLista(buscarCuadro_revVentas,busqueda):
-    lista=list(buscarCuadro_revVentas['values'])
-    lista.append(busqueda)
-    buscarCuadro_revVentas['values']=tuple(lista)
+    lista=CON_PROC.buscarprod(busqueda)
+    aux=[]
+    for fila in lista:
+        aux.append([fila[1],fila[3]])
+    buscarCuadro_revVentas['values']=tuple(aux)
+
+def actualizarListaINI(busqueda):
+    lista=CON_PROC.buscarprod(busqueda)
+    aux=[]
+    for fila in lista:
+        aux.append([fila[1],fila[3]])
+    return tuple(aux)
 
 def actualizarListaFechas(buscarCuadro_revVentas,busqueda,opcionFecha,opcionOrden):
     lista=list(buscarCuadro_revVentas['values'])

@@ -4,6 +4,7 @@ from mysql.connector import Error
 
 #Buscar producto (si se pasa una tupla se cae xd)
 def buscarprod (datos)  :
+    resultados=[]
     try :
         conexion = mysql.connector.connect(
         host = 'localhost',
@@ -11,16 +12,15 @@ def buscarprod (datos)  :
         user = 'root',
         password = 'admin1234',
         db = 'todomarket_vip'
-    )
+        )
         if conexion.is_connected() :
             print("Conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "SELECT * FROM producto WHERE nom='{}'"
+            sentencia = "SELECT * FROM producto WHERE nom like '%{}%'"
             cursor.execute(sentencia.format(datos))
             resultados = cursor.fetchall()
             for fila in resultados  :
                 print(fila[1],fila[2],fila[3],fila[4])
-                
         else    :
             print("Dato no encontrado") 
     except Error as ex :
@@ -29,6 +29,8 @@ def buscarprod (datos)  :
         if  conexion.is_connected() :
             conexion.close() #cierro conexion con la base
             print("Conexion finalizada.")
+            return resultados
+        return resultados
                         
 #Agregar producto
 def agregarprod (datos)  :

@@ -14,7 +14,7 @@ fgn = "#33354a"
 #tamaño subtitulos
 t_subt = 11
 
-Lista_Productos = ["Producto1","Producto2","Producto3","Mroducto4","Producto5","Producto6"]
+Lista_Productos = Func.actualizarListaINI('')
 Lista_Ver_Stock = []
 Fechas = []
 
