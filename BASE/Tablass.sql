@@ -9,7 +9,7 @@ CREATE TABLE Producto (
 	id_prod int not null auto_increment,
     nom varchar(100),
     cant int,
-    cod_bar int,
+    cod_bar bigint,
     prec int,
     id_marc int
 );
@@ -74,3 +74,4 @@ CREATE TABLE Catalogo_proveedores (
 	rut varchar(100) not null,
     id_prod int
 );
+
