@@ -342,6 +342,50 @@ buscarBoton_actDatos.grid(
     column=3,
     sticky=NSEW
 )
+    #labels
+labelNombreMostrar_actDatos = Label(actDatosFrame, text="Nombre:")
+labelNombreMostrar_actDatos.config(bg=back,fg=btfg)
+labelNombreMostrar_actDatos.grid(row=3,column=1,sticky=W)
+    #labels
+labelCodigoMostrar_actDatos = Label(actDatosFrame, text="Codigo de Barra:")
+labelCodigoMostrar_actDatos.config(bg=back,fg=btfg)
+labelCodigoMostrar_actDatos.grid(row=4, column=1, sticky=W)
+    #labels
+labelPrecioMostrar_actDatos = Label(actDatosFrame, text="Precio:")
+labelPrecioMostrar_actDatos.config(bg=back,fg=btfg)
+labelPrecioMostrar_actDatos.grid(row=5,column=1, sticky=W)
+    #labels
+labelMarcaMostrar_actDatos = Label(actDatosFrame, text="Marca:")
+labelMarcaMostrar_actDatos.config(bg=back,fg=btfg)
+labelMarcaMostrar_actDatos.grid(row=6,column=1,sticky=W)
+    #labels
+labelNombreVar_actDatos = Label(actDatosFrame, text="xxxxxxx")
+labelNombreVar_actDatos.config(bg=back,fg=btfg)
+labelNombreVar_actDatos.grid(row=3,column=2,sticky=W)
+    #labels
+labelCodigoVar_actDatos = Label(actDatosFrame, text="xxxxxxx")
+labelCodigoVar_actDatos.config(bg=back,fg=btfg)
+labelCodigoVar_actDatos.grid(row=4, column=2, sticky=W)
+    #labels
+labelPrecioVar_actDatos = Label(actDatosFrame, text="xxxxxxx")
+labelPrecioVar_actDatos.config(bg=back,fg=btfg)
+labelPrecioVar_actDatos.grid(row=5,column=2, sticky=W)
+    #labels
+labelMarcaVar_actDatos = Label(actDatosFrame, text="xxxxxxx")
+labelMarcaVar_actDatos.config(bg=back,fg=btfg)
+labelMarcaVar_actDatos.grid(row=6,column=2,sticky=W)
+    #boton buscar
+mostrarBoton_actDatos = Button(
+    actDatosFrame, 
+    text="Mostrar",
+    bg=bt1,fg=btfg,
+    command=lambda:Func.mostrarLabel(labelNombreVar_actDatos,labelCodigoVar_actDatos,labelPrecioVar_actDatos,labelMarcaVar_actDatos,buscarCuadro_actDatos.get())
+)
+mostrarBoton_actDatos.grid(
+    row=2,
+    column=3,
+    sticky=NSEW
+)
     #label actualizar
 actualizarLabel_actDatos = Label(actDatosFrame, text="Actualizar Producto",font="arial")
 actualizarLabel_actDatos.config(bg=back,fg=fgn)
@@ -356,28 +400,32 @@ labelNombre_actDatos.config(bg=back,fg=btfg)
 labelNombre_actDatos.grid(
     row=2, 
     column=4, 
-    sticky=NSEW
+    padx=30,
+    sticky=E
 )
 laberCod_actDatos = Label(actDatosFrame, text="Codigo de Barra")
 laberCod_actDatos.config(bg=back,fg=btfg)
 laberCod_actDatos.grid(
     row=3, 
     column=4, 
-    sticky=NSEW
+    padx=30,
+    sticky=E
 )
 labelPrec_actDatos = Label(actDatosFrame, text="Precio")
 labelPrec_actDatos.config(bg=back,fg=btfg)
 labelPrec_actDatos.grid(
     row=4, 
     column=4, 
-    sticky=NSEW
+    padx=30,
+    sticky=E
 )
 labelMarca_actDatos = Label(actDatosFrame, text="Marca")
 labelMarca_actDatos.config(bg=back,fg=btfg)
 labelMarca_actDatos.grid(
     row=5, 
     column=4, 
-    sticky=NSEW
+    padx=30,
+    sticky=E
 )
     #cuadros
 cuadroNombre_actDatos = Entry(actDatosFrame)
@@ -432,7 +480,7 @@ listaDatosLabel_actDatos.grid(
 actualizarBoton_actDatos = Button(actDatosFrame, text="Eliminar")
 actualizarBoton_actDatos.config(bg="#c7695c",fg="#561d14")
 actualizarBoton_actDatos.grid(
-    row=6,
+    row=7,
     column=1,
     sticky=NSEW
 )

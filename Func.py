@@ -129,3 +129,18 @@ def actualizarListaStock(buscarCuadro_revVentas,busqueda,opcionStock):
     lista=list(buscarCuadro_revVentas['values'])
     lista.append(busqueda)
     buscarCuadro_revVentas['values']=tuple(lista)
+
+def mostrarLabel(labelNombre,labelCodigo,labelPrecio,labelMarca,dato):
+    pos=0
+    codigo=[]
+    for letra in reversed(dato):
+        if letra == ' ':
+            break
+        pos+=1
+    codigo=dato[len(dato)-pos:]
+    dato=dato[:len(dato)-pos-1]
+    datos=list(CON_PROC.buscarprodUnico(dato,codigo))
+    labelNombre['text']=str(datos[1])
+    labelCodigo['text']=str(datos[3])
+    labelPrecio['text']=str(datos[4])
+    labelMarca['text']=str(datos[5])
