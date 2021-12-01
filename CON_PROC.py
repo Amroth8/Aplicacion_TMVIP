@@ -20,7 +20,7 @@ def buscarprod (datos)  :
             cursor.execute(sentencia.format(datos))
             resultados = cursor.fetchall()
             for fila in resultados  :
-                print(fila[1],fila[2],fila[3],fila[4])
+                print(fila[1],fila[2],fila[3],fila[4],fila[5])
         else    :
             print("Dato no encontrado") 
     except Error as ex :
@@ -72,7 +72,7 @@ def agregarprod (datos)  :
         if conexion.is_connected() :
             print("Conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "INSERT INTO producto (nom, cant, cod_bar, prec, marca) VALUES ('{0}',{1},{2},{3},{4})".format(datos[0], datos[1], datos [2],datos [3],datos[4])
+            sentencia = "INSERT INTO producto (nom, cant, cod_bar, prec, marca) VALUES ('{0}',{1},{2},{3},'{4}')".format(datos[0], datos[1], datos [2],datos [3],datos[4])
             cursor.execute(sentencia)
             conexion.commit()
             print("Registro insertado con exito") 
@@ -120,8 +120,8 @@ def actualizarProd (datos)  :
         if conexion.is_connected() :
             print("conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "UPDATE producto SET nom='{}', cant ={}, prec={} WHERE cod_bar = {}"
-            cursor.execute(sentencia.format(datos[0], datos[1], datos[3], datos[2]))
+            sentencia = "UPDATE producto SET nom='{}', cant ={}, prec={}, marca='{}' WHERE cod_bar = {}"
+            cursor.execute(sentencia.format(datos[0], datos[1], datos[3], datos[4], datos[2]))
             conexion.commit()
             print("Registro actualizado con exito") 
     except Error as ex :

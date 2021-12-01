@@ -11,18 +11,12 @@ CREATE TABLE Producto (
     cant int,
     cod_bar bigint,
     prec int,
-    id_marc int
+    marca varchar(1000)
 );
-
 
 CREATE TABLE Clasificacion_Productos (
 	id_cat int not null,
     id_prod int not null
-);
-
-CREATE TABLE Marca (
-	id_marc int not null auto_increment,
-    nom varchar(100)
 );
 
 CREATE TABLE Locall (
@@ -51,14 +45,6 @@ CREATE TABLE Producto_vendido (
     cod_ven int
 );
 
-CREATE TABLE Proveedor (
-	rut varchar(100) not null,
-    nomp varchar (100),
-    direcp varchar (100),
-    mail varchar(100),
-    tel varchar(100)
-);
-
 CREATE TABLE Bodega (
 	id_bod int,
     direcb varchar(100)
@@ -69,9 +55,3 @@ CREATE TABLE Stock_bodega(
     id_bod int,
     cant int
 );
-
-CREATE TABLE Catalogo_proveedores (
-	rut varchar(100) not null,
-    id_prod int
-);
-
