@@ -54,8 +54,61 @@ def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
 def buscar(text):
     print(text)
 
-def actualizar_datos(nombre,codigo,precio,marca):
-    print(nombre,' ',codigo,' ',precio,' ',marca)
+def verificar_datos_act(codigo,precio,label):
+    try:
+        if codigo!='':
+            codigo=int(codigo)
+            if codigo<0:
+                label['text']='Error en el tipo de dato codigo barra'
+                label.grid(row=7,column=5,padx=30,sticky=NSEW)
+                return False
+        if precio!='':
+            precio=int(precio)
+            if precio<=0:
+                label['text']='Error precio menor a 0'
+                label.grid(row=7,column=5,padx=30,sticky=NSEW)
+                return False
+    except:
+        label['text']='Error en el tipo de dato'
+        label.grid(row=7,column=5,padx=30,sticky=NSEW)
+        return False
+    return True
+
+def sentecia_actualizar(nombre,codigo,precio,marca):
+    sentencia = "UPDATE producto SET"
+    segundo=False
+    if nombre!='':
+        sentencia = sentencia+" nom='{}'"
+        segundo=True
+    if codigo!='':
+        if segundo:
+            sentencia = sentencia+", cod_bar ={}"
+        else:
+            segundo=True
+            sentencia = sentencia+" cod_bar ={}"
+    if precio!='':
+        if segundo:
+            sentencia = sentencia+", prec ={}"
+        else:
+            segundo=True
+            sentencia = sentencia+" prec ={}"
+    if marca!='':
+        if segundo:
+            sentencia = sentencia+", marca ='{}'"
+        else:
+            segundo=True
+            sentencia = sentencia+" pmarca ='{}'"
+    sentencia = sentencia+" WHERE cod_bar = {} and nom={}"
+    print(sentencia)
+
+def actualizar_datos(nombre,codigo,precio,marca,label):
+    label.grid_remove()
+    if verificar_datos_act(codigo.get(),precio.get(),label):
+        sentecia_actualizar(nombre.get(),codigo.get(),precio.get(),marca.get())
+    nombre.delete(0,END)
+    codigo.delete(0,END)
+    precio.delete(0,END)
+    marca.delete(0,END)
 
 def verificar_datos(codigo,precio,label):
     try:
@@ -63,27 +116,15 @@ def verificar_datos(codigo,precio,label):
         precio=int(precio)
         if codigo<0:
             label['text']='Error en el tipo de dato codigo barra'
-            label.grid(
-                row=6,
-                column=2,
-                stick=NSEW
-            )
+            label.grid(row=6,column=2,stick=NSEW)
             return False
         elif precio<=0:
             label['text']='Error precio menor a 0'
-            label.grid(
-                row=6,
-                column=2,
-                stick=NSEW
-            )
+            label.grid( row=6,column=2,stick=NSEW)
             return False
     except:
         label['text']='Error en el tipo de dato'
-        label.grid(
-            row=6,
-            column=2,
-            stick=NSEW
-        )
+        label.grid(row=6,column=2,stick=NSEW)
         return False
     return True
 
@@ -97,7 +138,7 @@ def añadir_productos(cuadroNombre,cuadroCod,cuadroPrec,cuadroMarca,label_errorP
     cuadroNombre.delete(0,END)
 
 def nuevos_datos(nombre,codigo,precio,marca):
-    datos=[nombre,0,codigo,precio]
+    datos=[nombre,0,codigo,precio,marca]
     CON_PROC.agregarprod(datos)
 
 def actualizar_stock(cant,opcion):

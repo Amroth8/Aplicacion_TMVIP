@@ -458,18 +458,12 @@ cuadroMarca_actDatos.grid(
 )
 label_errorProd_actDatos=Label(actDatosFrame, text="Error")
 label_errorProd_actDatos.config(bg=back,fg='red')
-label_errorProd_actDatos.grid(
-    row=7, 
-    column=5, 
-    padx=30,
-    sticky=E
-)
     #boton actualizar
 actualizarBoton_actDatos = Button(
     actDatosFrame, 
     text="Actualizar",
     bg=bt1,fg=btfg,
-    command=lambda:Func.actualizar_datos(cuadroNombre_actDatos.get(),cuadroCod_actDatos.get(),cuadroPrec_actDatos.get(),cuadroMarca_actDatos.get())
+    command=lambda:Func.actualizar_datos(cuadroNombre_actDatos,cuadroCod_actDatos,cuadroPrec_actDatos,cuadroMarca_actDatos,label_errorProd_actDatos)
 )
 actualizarBoton_actDatos.grid(
     row=6,

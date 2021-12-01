@@ -72,7 +72,7 @@ def agregarprod (datos)  :
         if conexion.is_connected() :
             print("Conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "INSERT INTO producto (nom, cant, cod_bar, prec) VALUES ('{0}',{1},{2},{3})".format(datos[0], datos[1], datos [2],datos [3])
+            sentencia = "INSERT INTO producto (nom, cant, cod_bar, prec, marca) VALUES ('{0}',{1},{2},{3},{4})".format(datos[0], datos[1], datos [2],datos [3],datos[4])
             cursor.execute(sentencia)
             conexion.commit()
             print("Registro insertado con exito") 
