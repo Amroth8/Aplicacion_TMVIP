@@ -137,7 +137,7 @@ listaLabel_ventas.grid(
 revVentasFrame = Frame(opcionesFrame)
 revVentasFrame.config(
     bg=back,
-    width=550, 
+    width=600,
     height=460
 )
 revVentasFrame.grid_propagate(False)
@@ -301,7 +301,7 @@ exportarBoton_revVentas.config(
 actDatosFrame = Frame(opcionesFrame)
 actDatosFrame.config(
     bg=back,
-    width=550, 
+    width=1000,
     height=460
 )
 actDatosFrame.grid_propagate(False)
@@ -323,11 +323,13 @@ buscarProdLabel_actDatos.grid(
     #cuadro
 buscarCuadro_actDatos = ttk.Combobox(
     actDatosFrame,
-    values=Lista_Productos
+    values=Lista_Productos,
+    width=50
 )
 buscarCuadro_actDatos.grid(
     row=1, 
     column=1,
+    columnspan=2,
     sticky=NSEW
 )
     #boton buscar
@@ -492,7 +494,7 @@ actualizarBoton_actDatos.grid(
 añadirProdFrame = Frame(opcionesFrame)
 añadirProdFrame.config(
     bg=back,
-    width=550, 
+    width=600,
     height=460
 )
 añadirProdFrame.grid_propagate(False)
@@ -578,7 +580,7 @@ actualizarBoton_añadirProd.grid(
 verStockFrame = Frame(opcionesFrame)
 verStockFrame.config(
     bg=back,
-    width=550, 
+    width=600,
     height=460
 )
 verStockFrame.grid_propagate(False)
@@ -724,7 +726,7 @@ exportarBoton_verStock.config(
 actStockFrame = Frame(opcionesFrame)
 actStockFrame.config(
     bg=back,
-    width=550, 
+    width=600,
     height=460
 )
 actStockFrame.grid_propagate(False)
