@@ -108,7 +108,7 @@ def eliminarProd (datos)  :
             print("Conexion finalizada.")
                 
 #Actualizar producto
-def actualizarProd (datos)  :
+def actualizarProd (datos,_sentencia)  :
     try :
         conexion = mysql.connector.connect(
         host = 'localhost',
@@ -120,8 +120,8 @@ def actualizarProd (datos)  :
         if conexion.is_connected() :
             print("conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "UPDATE producto SET nom='{}', cant ={}, prec={}, marca='{}' WHERE cod_bar = {}"
-            cursor.execute(sentencia.format(datos[0], datos[1], datos[3], datos[4], datos[2]))
+            sentencia = _sentencia
+            cursor.execute(sentencia.format(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5]))
             conexion.commit()
             print("Registro actualizado con exito") 
     except Error as ex :
@@ -130,6 +130,32 @@ def actualizarProd (datos)  :
         if  conexion.is_connected() :
             conexion.close() #cierro conexion con la base
             print("Conexion finalizada.")
+
+def existe (nom,cod)  :
+    resultados=[]
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+    )
+        if conexion.is_connected() :
+            print("conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "SELECT * FROM producto WHERE nom='{}' and cod_bar={}"
+            cursor.execute(sentencia.format(nom,cod))
+            resultados = cursor.fetchall()
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+    if resultados==[]:
+        return False
+    return True
  
             
 #PPRUEBAS

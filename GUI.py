@@ -465,7 +465,7 @@ actualizarBoton_actDatos = Button(
     actDatosFrame, 
     text="Actualizar",
     bg=bt1,fg=btfg,
-    command=lambda:Func.actualizar_datos(cuadroNombre_actDatos,cuadroCod_actDatos,cuadroPrec_actDatos,cuadroMarca_actDatos,label_errorProd_actDatos)
+    command=lambda:Func.actualizar_datos(cuadroNombre_actDatos,cuadroCod_actDatos,cuadroPrec_actDatos,cuadroMarca_actDatos,label_errorProd_actDatos,buscarCuadro_actDatos.get())
 )
 actualizarBoton_actDatos.grid(
     row=6,

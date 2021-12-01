@@ -60,51 +60,91 @@ def verificar_datos_act(codigo,precio,label):
             codigo=int(codigo)
             if codigo<0:
                 label['text']='Error en el tipo de dato codigo barra'
-                label.grid(row=7,column=5,padx=30,sticky=NSEW)
+                label.grid(row=7,column=5,sticky=NSEW)
                 return False
         if precio!='':
             precio=int(precio)
             if precio<=0:
                 label['text']='Error precio menor a 0'
-                label.grid(row=7,column=5,padx=30,sticky=NSEW)
+                label.grid(row=7,column=5,sticky=NSEW)
                 return False
     except:
         label['text']='Error en el tipo de dato'
-        label.grid(row=7,column=5,padx=30,sticky=NSEW)
+        label.grid(row=7,column=5,sticky=NSEW)
         return False
     return True
 
-def sentecia_actualizar(nombre,codigo,precio,marca):
+def sentecia_actualizar(nombre,codigo,precio,marca,codigoAntiguo,datoAntiguo):
     sentencia = "UPDATE producto SET"
     segundo=False
+    cant=0
+    datos=[]
     if nombre!='':
         sentencia = sentencia+" nom='{}'"
         segundo=True
+        datos.append(nombre)
+        cant+=1
     if codigo!='':
         if segundo:
             sentencia = sentencia+", cod_bar ={}"
+            datos.append(codigo)
+            cant+=1
         else:
             segundo=True
             sentencia = sentencia+" cod_bar ={}"
+            datos.append(codigo)
+            cant+=1
     if precio!='':
         if segundo:
             sentencia = sentencia+", prec ={}"
+            datos.append(precio)
+            cant+=1
         else:
             segundo=True
             sentencia = sentencia+" prec ={}"
+            datos.append(precio)
+            cant+=1
     if marca!='':
         if segundo:
             sentencia = sentencia+", marca ='{}'"
+            datos.append(marca)
+            cant+=1
         else:
             segundo=True
-            sentencia = sentencia+" pmarca ='{}'"
-    sentencia = sentencia+" WHERE cod_bar = {} and nom={}"
-    print(sentencia)
+            sentencia = sentencia+" marca ='{}'"
+            datos.append(marca)
+            cant+=1
+    sentencia = sentencia+" WHERE cod_bar = {} and nom='{}' #"
+    datos.append(codigoAntiguo)
+    datos.append(datoAntiguo)
+    while cant < 4:
+        sentencia = sentencia+"{}"
+        cant+=1
+        datos.append(0)
+    return datos,sentencia
 
-def actualizar_datos(nombre,codigo,precio,marca,label):
+def separNomCod(dato):
+    pos=0
+    codigo=[]
+    for letra in reversed(dato):
+        if letra == ' ':
+            break
+        pos+=1
+    if pos >= len(dato):
+        codigo=0
+    else:
+        codigo=dato[len(dato)-pos:]
+    dato=dato[:len(dato)-pos-1]
+    return codigo,dato
+
+def actualizar_datos(nombre,codigo,precio,marca,label,datoAntiguo):
     label.grid_remove()
-    if verificar_datos_act(codigo.get(),precio.get(),label):
-        sentecia_actualizar(nombre.get(),codigo.get(),precio.get(),marca.get())
+    if datoAntiguo!='':
+        codigoAntiguo,datoAntiguo=separNomCod(datoAntiguo)
+        if verificar_datos_act(codigo.get(),precio.get(),label):
+            if CON_PROC.existe(datoAntiguo,codigoAntiguo):
+                datos,sentencia=sentecia_actualizar(nombre.get(),codigo.get(),precio.get(),marca.get(),codigoAntiguo,datoAntiguo)
+                CON_PROC.actualizarProd(datos,sentencia)
     nombre.delete(0,END)
     codigo.delete(0,END)
     precio.delete(0,END)
@@ -172,14 +212,7 @@ def actualizarListaStock(buscarCuadro_revVentas,busqueda,opcionStock):
     buscarCuadro_revVentas['values']=tuple(lista)
 
 def mostrarLabel(labelNombre,labelCodigo,labelPrecio,labelMarca,dato):
-    pos=0
-    codigo=[]
-    for letra in reversed(dato):
-        if letra == ' ':
-            break
-        pos+=1
-    codigo=dato[len(dato)-pos:]
-    dato=dato[:len(dato)-pos-1]
+    codigo,dato=separNomCod(dato)
     datos=list(CON_PROC.buscarprodUnico(dato,codigo))
     labelNombre['text']=str(datos[1])
     labelCodigo['text']=str(datos[3])
