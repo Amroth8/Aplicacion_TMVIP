@@ -456,6 +456,14 @@ cuadroMarca_actDatos.grid(
     columnspan=2, 
     sticky=NSEW
 )
+label_errorProd_actDatos=Label(actDatosFrame, text="Error")
+label_errorProd_actDatos.config(bg=back,fg='red')
+label_errorProd_actDatos.grid(
+    row=7, 
+    column=5, 
+    padx=30,
+    sticky=E
+)
     #boton actualizar
 actualizarBoton_actDatos = Button(
     actDatosFrame, 
