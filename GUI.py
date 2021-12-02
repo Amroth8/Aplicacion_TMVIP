@@ -164,7 +164,7 @@ tipoInfVentasLabel_revVentas.config(bg=back,fg=fgn)
 tipoInfVentasLabel_revVentas.grid(
     row=1, 
     column=1,
-    sticky=NSEW
+    sticky=W   
 )
     #label
 tipoInfVentasLabel_revVentas = Label(revVentasFrame, text="Seleccione Periodo de Tiempo",font=("arial",t_subt))
@@ -188,7 +188,7 @@ rb_semanal = Radiobutton(
 ).grid(
     row=2,
     column=1,
-    sticky=NSEW
+    sticky=W
 )
 rb_mensual = Radiobutton(
     revVentasFrame, 
@@ -199,7 +199,7 @@ rb_mensual = Radiobutton(
 ).grid(
     row=3,
     column=1,
-    sticky=NSEW
+    sticky=W
 )
 rb_masVendidos = Radiobutton(
     revVentasFrame, 
@@ -210,7 +210,7 @@ rb_masVendidos = Radiobutton(
 ).grid(
     row=5,
     column=1,
-    sticky=NSEW
+    sticky=W
 )
 rb_menosVendidos = Radiobutton(
     revVentasFrame, 
@@ -221,7 +221,7 @@ rb_menosVendidos = Radiobutton(
 ).grid(
     row=6,
     column=1,
-    sticky=NSEW
+    sticky=W
 )
     #cuadro
 buscarCuadro_revVentas = ttk.Combobox(
@@ -252,7 +252,7 @@ tipoInfVentasLabel_revVentas.config(bg=back,fg=btfg)
 tipoInfVentasLabel_revVentas.grid(
     row=4, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
 buscarBoton_revVentas.config(
     cursor="hand2",
@@ -506,33 +506,33 @@ label_añadirProd.grid(
     column=0, 
     sticky=NSEW
 )
-labelNombre_añadirProd = Label(añadirProdFrame, text="Nombre")
+labelNombre_añadirProd = Label(añadirProdFrame, text="Nombre: ")
 labelNombre_añadirProd.config(bg=back,fg=btfg)
 labelNombre_añadirProd.grid(
     row=2, 
     column=0, 
-    sticky=NSEW
+    sticky=E
 )
-laberCod_añadirProd = Label(añadirProdFrame, text="Codigo de Barra")
+laberCod_añadirProd = Label(añadirProdFrame, text="Codigo de Barra: ")
 laberCod_añadirProd.config(bg=back, fg=btfg)
 laberCod_añadirProd.grid(
     row=3, 
     column=0, 
-    sticky=NSEW
+    sticky=E
 )
-labelPrec_añadirProd = Label(añadirProdFrame, text="Precio")
+labelPrec_añadirProd = Label(añadirProdFrame, text="Precio: ")
 labelPrec_añadirProd.config(bg=back,fg=btfg)
 labelPrec_añadirProd.grid(
     row=4, 
     column=0, 
-    sticky=NSEW
+    sticky=E
 )
-labelMarca_añadirProd = Label(añadirProdFrame, text="Marca")
+labelMarca_añadirProd = Label(añadirProdFrame, text="Marca: ")
 labelMarca_añadirProd.config(bg=back,fg=btfg)
 labelMarca_añadirProd.grid(
     row=5, 
     column=0, 
-    sticky=NSEW
+    sticky=E
 )
     #cuadros
 cuadroNombre_añadirProd = Entry(añadirProdFrame)
@@ -606,7 +606,7 @@ buscarVentasLabel_verStock.config(bg=back,fg=btfg)
 buscarVentasLabel_verStock.grid(
     row=1, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
 opcionesStock = StringVar()
 opcionesStock.set(None)
@@ -620,7 +620,7 @@ rb_semanal_verStock = Radiobutton(
 ).grid(
     row=2,
     column=1,
-    sticky=NSEW
+    sticky=W
 )
 rb_mensual_verStock = Radiobutton(
     verStockFrame, 
@@ -631,7 +631,7 @@ rb_mensual_verStock = Radiobutton(
 ).grid(
     row=3,
     column=1,
-    sticky=NSEW
+    sticky=W
 )
 rb_masVendido_verStock = Radiobutton(
     verStockFrame, 
@@ -642,7 +642,7 @@ rb_masVendido_verStock = Radiobutton(
 ).grid(
     row=4,
     column=1,
-    sticky=NSEW
+    sticky=W
 )
     #cuadro
 buscarCuadro_verStock = ttk.Combobox(
@@ -765,57 +765,57 @@ buscarBoton_actStock = Button(
 buscarBoton_actStock.grid(
     row=1,
     column=4,
-    sticky=NSEW
+    sticky=W
 )
     #labels
-labelNombre_actStock = Label(actStockFrame, text="Nombre:")
+labelNombre_actStock = Label(actStockFrame, text="Nombre: ")
 labelNombre_actStock.config(bg=back,fg=btfg)
 labelNombre_actStock.grid(
     row=2, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
-laberCod_actStock = Label(actStockFrame, text="Codigo de Barra:")
+laberCod_actStock = Label(actStockFrame, text="Codigo de Barra: ")
 laberCod_actStock.config(bg=back,fg=btfg)
 laberCod_actStock.grid(
     row=3, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
-labelPrec_actStock = Label(actStockFrame, text="Precio:")
+labelPrec_actStock = Label(actStockFrame, text="Precio: ")
 labelPrec_actStock.config(bg=back,fg=btfg)
 labelPrec_actStock.grid(
     row=4, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
-labelMarca_actStock = Label(actStockFrame, text="Marca:")
+labelMarca_actStock = Label(actStockFrame, text="Marca: ")
 labelMarca_actStock.config(bg=back,fg=btfg)
 labelMarca_actStock.grid(
     row=5, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
-labelMarca_actStock = Label(actStockFrame, text="Stock General:")
+labelMarca_actStock = Label(actStockFrame, text="Stock General: ")
 labelMarca_actStock.config(bg=back,fg=btfg)
 labelMarca_actStock.grid(
     row=6, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
-labelMarca_actStock = Label(actStockFrame, text="Stock Bodega:")
+labelMarca_actStock = Label(actStockFrame, text="Stock Bodega: ")
 labelMarca_actStock.config(bg=back,fg=btfg)
 labelMarca_actStock.grid(
     row=7, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
-labelMarca_actStock = Label(actStockFrame, text="Stock Tienda:")
+labelMarca_actStock = Label(actStockFrame, text="Stock Tienda: ")
 labelMarca_actStock.config(bg=back,fg=btfg)
 labelMarca_actStock.grid(
     row=8, 
     column=1,
-    sticky=NSEW
+    sticky=W
 )
     #label
 listaDatosLabel_actStock = Label(actStockFrame, text="Destino",font="arial")
@@ -823,7 +823,7 @@ listaDatosLabel_actStock.config(bg=back,fg=fgn)
 listaDatosLabel_actStock.grid(
     row=1, 
     column=5,
-    sticky=NSEW
+    sticky=W
 )
 opcionesIngreso = StringVar()
 opcionesIngreso.set(None)
@@ -837,7 +837,7 @@ rb_semanal_verStock = Radiobutton(
 ).grid(
     row=2,
     column=5,
-    sticky=NSEW
+    sticky=W
 )
 rb_mensual_verStock = Radiobutton(
     actStockFrame, 
@@ -848,7 +848,7 @@ rb_mensual_verStock = Radiobutton(
 ).grid(
     row=3,
     column=5,
-    sticky=NSEW
+    sticky=W
 )
     #label
 cantLabel_actStock = Label(actStockFrame, text="Cantidad : ",font=("arial",11))
@@ -856,7 +856,7 @@ cantLabel_actStock.config(bg=back,fg=btfg)
 cantLabel_actStock.grid(
     row=4, 
     column=5,
-    sticky=NSEW
+    sticky=W
 )
     #cuadros
 cuadroCant_actStock = Entry(actStockFrame)
