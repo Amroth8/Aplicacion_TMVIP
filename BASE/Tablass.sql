@@ -26,8 +26,8 @@ CREATE TABLE Locall (
 );
 
 CREATE TABLE Stock_Local(
-	id_prod int not null,
-    id_loc int not null,
+	id_prod int,
+    id_loc int,
     cant int
 );
 

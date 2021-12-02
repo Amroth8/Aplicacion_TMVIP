@@ -1,10 +1,13 @@
 ALTER TABLE Categoria ADD PRIMARY KEY (id_cat);
 ALTER TABLE Producto ADD PRIMARY KEY (id_prod);
 ALTER TABLE Locall ADD PRIMARY KEY (id_loc);
-ALTER TABLE Marca ADD PRIMARY KEY (id_marc);
 ALTER TABLE Venta_diaria ADD PRIMARY KEY (cod_ven);
-ALTER TABLE Proveedor ADD PRIMARY KEY (rut);
 ALTER TABLE Bodega ADD PRIMARY KEY (id_bod);
+
+ALTER TABLE stock_local ADD PRIMARY KEY (id_prod, id_loc);
+ALTER TABLE clasificacion_productos ADD PRIMARY KEY (id_cat,id_prod);
+ALTER TABLE stock_bodega ADD PRIMARY KEY (id_bod,id_prod);
+ALTER TABLE producto_vendido ADD PRIMARY KEY (id_prod, cod_ven);
 
 ALTER TABLE clasificacion_productos
     ADD CONSTRAINT fk_cat FOREIGN KEY (id_cat)

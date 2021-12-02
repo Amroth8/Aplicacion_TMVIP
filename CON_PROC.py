@@ -31,33 +31,6 @@ def buscarprod (datos)  :
             print("Conexion finalizada.")
             return resultados
         return resultados
-
-def buscarprodUnico (nom,cod)  :
-    resultados=[]
-    try :
-        conexion = mysql.connector.connect(
-        host = 'localhost',
-        port = 3306,
-        user = 'root',
-        password = 'admin1234',
-        db = 'todomarket_vip'
-        )
-        if conexion.is_connected() :
-            print("Conexion exitosa.")
-            cursor=conexion.cursor()
-            sentencia = "SELECT * FROM producto WHERE nom='{}' and cod_bar={}"
-            cursor.execute(sentencia.format(nom,cod))
-            resultados = cursor.fetchall()
-        else    :
-            print("Dato no encontrado") 
-    except Error as ex :
-        print("Error de conexion", ex)
-    finally :
-        if  conexion.is_connected() :
-            conexion.close() #cierro conexion con la base
-            print("Conexion finalizada.")
-            return resultados[0]
-        return resultados[0]
                         
 #Agregar producto
 def agregarprod (datos)  :
@@ -158,7 +131,35 @@ def existe (nom,cod)  :
     return True
  
             
-#PPRUEBAS
+#BUSCAR STOCK DE UN PRODUCTO
+def buscarstockUnico (nom)  :
+    resultados=[]
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+        )
+        if conexion.is_connected() :
+            print("Conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "SELECT producto.nom, stock_local.cant FROM stock_local, producto WHERE producto.nom = '{}'"
+            cursor.execute(sentencia.format(nom))
+            resultados = cursor.fetchall()
+        else    :
+            print("Dato no encontrado") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+            return resultados
+        return resultados
+    
+    #PPRUEBAS
 nombre = 'azucar '#'coca cola' #"pampita"
 cantidad = 10 #110
 codigo_de_barras = 55
@@ -170,3 +171,6 @@ producto = (nombre, cantidad, codigo_de_barras, precio)
 #eliminarProd(producto)
 #actualizarProd(producto)
 #buscarprod('azucar') 
+#buscar = buscarstockUnico('leche')
+#for fila in buscar  :
+    #print(fila[0], fila[1])
