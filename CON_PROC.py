@@ -234,6 +234,37 @@ def stockLocal ( )  :
             return resultados
         return resultados 
     
+
+#MOSTRAR STOCK EN BODEGA DE LOS PRODUCTOS CON STOCK IGUAL Y MAYOR A 0
+def stockBodega ( )  :
+    resultados=[]
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+        )
+        if conexion.is_connected() :
+            print("Conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "SELECT DISTINCT producto.cant, nom AS nombre, cod_bar AS codigo_de_barra, stock_bodega.cant AS stockBodega FROM producto, stock_bodega WHERE stock_bodega.cant>=0"
+            cursor.execute(sentencia)
+            resultados = cursor.fetchall()
+            for fila in resultados  :
+                print("{:<8} {:<34} {:<13} {:<10}".format(fila[0], fila[1],fila[2],fila[3]))
+        else    :
+            print("Dato no encontrado") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+            return resultados
+        return resultados 
+
     
     #PPRUEBAS
 nombre = 'azucar '#'coca cola' #"pampita"
