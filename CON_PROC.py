@@ -77,37 +77,9 @@ def agregarprod (datos)  :
             sentencia = "SELECT id_prod FROM producto WHERE nom='{}' and cod_bar={}"
             cursor.execute(sentencia.format(datos[0],datos [2]))
             resultados = cursor.fetchall()
-            sentencia = "INSERT INTO stock_bodega (id_prod, id_bod, cant) VALUES ({0},{1},{2})".format(resultados[0][0], 1,0)
+            sentencia = "INSERT INTO stock_bodega (id_prod, id_bod, cant) VALUES ({0},{1},{2})".format(resultados[0][0], 1,datos[6])
             cursor.execute(sentencia)
-            sentencia = "INSERT INTO stock_local (id_prod, id_loc, cant) VALUES ({0},{1},{2})".format(resultados[0][0], 1,0)
-            cursor.execute(sentencia)
-            conexion.commit()
-            print("Registro insertado con exito") 
-    except Error as ex :
-        print("Error de conexion", ex)
-    finally :
-        if  conexion.is_connected() :
-            conexion.close() #cierro conexion con la base
-            print("Conexion finalizada.")
-
-def stockInicial(nom,cod):
-    try :
-        conexion = mysql.connector.connect(
-        host = 'localhost',
-        port = 3306,
-        user = 'root',
-        password = 'admin1234',
-        db = 'todomarket_vip'
-    )
-        if conexion.is_connected() :
-            print("Conexion exitosa.")
-            cursor=conexion.cursor()
-            sentencia = "SELECT id_prod FROM producto WHERE nom='{}' and cod_bar={}"
-            cursor.execute(sentencia.format(nom,cod))
-            resultados = cursor.fetchall()
-            sentencia = "INSERT INTO stock_bodega (id_prod, id_bod, cant) VALUES ({0},{1},{2})".format(resultados[0], 1,0)
-            cursor.execute(sentencia)
-            sentencia = "INSERT INTO stock_local (id_prod, id_loc, cant) VALUES ({0},{1},{2})".format(resultados[0], 1,0)
+            sentencia = "INSERT INTO stock_local (id_prod, id_loc, cant) VALUES ({0},{1},{2})".format(resultados[0][0], 1,datos[5])
             cursor.execute(sentencia)
             conexion.commit()
             print("Registro insertado con exito") 
@@ -131,7 +103,18 @@ def eliminarProd (datos)  :
         if conexion.is_connected() :
             print("conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "DELETE FROM producto WHERE nom='{}' AND cod_bar ={}".format(datos[0],datos[2])
+
+            sentencia = "SELECT id_prod FROM producto WHERE nom='{}' and cod_bar={}"
+            cursor.execute(sentencia.format(datos[0],datos[1]))
+            resultados = cursor.fetchall()
+
+            sentencia = "DELETE FROM stock_bodega WHERE id_prod={}".format(resultados[0][0])
+            cursor.execute(sentencia)
+            
+            sentencia = "DELETE FROM stock_local WHERE id_prod={}".format(resultados[0][0])
+            cursor.execute(sentencia)
+
+            sentencia = "DELETE FROM producto WHERE nom='{}' AND cod_bar ={}".format(datos[0],datos[1])
             cursor.execute(sentencia)
             conexion.commit()
             print("Registro eliminado con exito") 

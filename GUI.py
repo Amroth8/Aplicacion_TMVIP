@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image
 from PIL import ImageTk
+from CON_PROC import eliminarProd
 import Func
 
 # Colores
@@ -361,19 +362,19 @@ labelMarcaMostrar_actDatos = Label(actDatosFrame, text="Marca:")
 labelMarcaMostrar_actDatos.config(bg=back,fg=btfg)
 labelMarcaMostrar_actDatos.grid(row=6,column=1,sticky=W)
     #labels
-labelNombreVar_actDatos = Label(actDatosFrame, text="xxxxxxx")
+labelNombreVar_actDatos = Label(actDatosFrame, text="")
 labelNombreVar_actDatos.config(bg=back,fg=btfg)
 labelNombreVar_actDatos.grid(row=3,column=2,sticky=W)
     #labels
-labelCodigoVar_actDatos = Label(actDatosFrame, text="xxxxxxx")
+labelCodigoVar_actDatos = Label(actDatosFrame, text="")
 labelCodigoVar_actDatos.config(bg=back,fg=btfg)
 labelCodigoVar_actDatos.grid(row=4, column=2, sticky=W)
     #labels
-labelPrecioVar_actDatos = Label(actDatosFrame, text="xxxxxxx")
+labelPrecioVar_actDatos = Label(actDatosFrame, text="")
 labelPrecioVar_actDatos.config(bg=back,fg=btfg)
 labelPrecioVar_actDatos.grid(row=5,column=2, sticky=W)
     #labels
-labelMarcaVar_actDatos = Label(actDatosFrame, text="xxxxxxx")
+labelMarcaVar_actDatos = Label(actDatosFrame, text="")
 labelMarcaVar_actDatos.config(bg=back,fg=btfg)
 labelMarcaVar_actDatos.grid(row=6,column=2,sticky=W)
     #boton buscar
@@ -481,7 +482,11 @@ listaDatosLabel_actDatos.grid(
     sticky=NSEW
 )
     #boton eliminar producto
-actualizarBoton_actDatos = Button(actDatosFrame, text="Eliminar")
+actualizarBoton_actDatos = Button(
+    actDatosFrame, 
+    text="Eliminar",
+    command=lambda:Func.eliminar_producto(labelNombreVar_actDatos,labelCodigoVar_actDatos,labelNombreVar_actDatos,labelCodigoVar_actDatos,labelPrecioVar_actDatos,labelMarcaVar_actDatos)
+)
 actualizarBoton_actDatos.config(bg="#c7695c",fg="#561d14")
 actualizarBoton_actDatos.grid(
     row=7,
@@ -534,6 +539,20 @@ labelMarca_añadirProd.grid(
     column=0, 
     sticky=E
 )
+labelLocal_añadirProd = Label(añadirProdFrame, text="Cantidad Local: ")
+labelLocal_añadirProd.config(bg=back,fg=btfg)
+labelLocal_añadirProd.grid(
+    row=6, 
+    column=0, 
+    sticky=E
+)
+labelBodega_añadirProd = Label(añadirProdFrame, text="Cantidad Bodega: ")
+labelBodega_añadirProd.config(bg=back,fg=btfg)
+labelBodega_añadirProd.grid(
+    row=7, 
+    column=0, 
+    sticky=E
+)
     #cuadros
 cuadroNombre_añadirProd = Entry(añadirProdFrame)
 cuadroNombre_añadirProd.grid(
@@ -559,6 +578,18 @@ cuadroMarca_añadirProd.grid(
     column=1,
     sticky=NSEW
 )
+cuadroLocal_añadirProd = Entry(añadirProdFrame)
+cuadroLocal_añadirProd.grid(
+    row=6, 
+    column=1,
+    sticky=NSEW
+)
+cuadroBodega_añadirProd = Entry(añadirProdFrame)
+cuadroBodega_añadirProd.grid(
+    row=7, 
+    column=1,
+    sticky=NSEW
+)
     #label error
 label_errorProd = Label(añadirProdFrame, text="Error", font="arial")
 label_errorProd.config(bg=back,fg='red')
@@ -567,10 +598,10 @@ actualizarBoton_añadirProd = Button(
     añadirProdFrame, 
     text="Añadir",
     bg=bt1,fg=btfg,
-    command=lambda:Func.añadir_productos(cuadroNombre_añadirProd,cuadroCod_añadirProd,cuadroPrec_añadirProd,cuadroMarca_añadirProd,label_errorProd)
+    command=lambda:Func.añadir_productos(cuadroNombre_añadirProd,cuadroCod_añadirProd,cuadroPrec_añadirProd,cuadroMarca_añadirProd,cuadroLocal_añadirProd,cuadroBodega_añadirProd,label_errorProd)
 )
 actualizarBoton_añadirProd.grid(
-    row=6,
+    row=8,
     column=1,
     sticky=NSEW
 )

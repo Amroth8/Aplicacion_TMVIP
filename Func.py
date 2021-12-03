@@ -168,17 +168,49 @@ def verificar_datos(codigo,precio,label):
         return False
     return True
 
-def añadir_productos(cuadroNombre,cuadroCod,cuadroPrec,cuadroMarca,label_errorProd):
+def verificar_datos_stock(_local,_bodega,label):
+    try:
+        local=int(_local)
+        bodega=int(_bodega)
+        if bodega < 0:
+            label['text']='Error cantidad bodega menor a 0'
+            label.grid(row=6,column=2,stick=NSEW)
+            return False
+        elif local<0:
+            label['text']='Error cantidad local menor a 0'
+            label.grid( row=6,column=2,stick=NSEW)
+            return False
+    except:
+        if _local!='' or _bodega!='':
+            label['text']='Error en el tipo de dato'
+            label.grid(row=8,column=2,stick=NSEW)
+            return False
+        return True
+    return True
+
+def getCantidad(_cantLocal,_cantBodega):
+    cantLocal=_cantLocal
+    cantBodega=_cantBodega
+    if _cantLocal=='':
+        cantLocal=0
+    if _cantBodega=='':
+        cantBodega=0
+    return cantLocal,cantBodega
+
+def añadir_productos(cuadroNombre,cuadroCod,cuadroPrec,cuadroMarca,cuadroLocal,cuadroBodega,label_errorProd):
     label_errorProd.grid_remove()
-    if verificar_datos(cuadroCod.get(),cuadroPrec.get(),label_errorProd):
-        nuevos_datos(cuadroNombre.get(),cuadroCod.get(),cuadroPrec.get(),cuadroMarca.get())
+    if verificar_datos(cuadroCod.get(),cuadroPrec.get(),label_errorProd) and verificar_datos_stock(cuadroLocal.get(),cuadroBodega.get(),label_errorProd):
+        cantLocal,cantBodega=getCantidad(cuadroLocal.get(),cuadroBodega.get())
+        nuevos_datos(cuadroNombre.get(),cuadroCod.get(),cuadroPrec.get(),cuadroMarca.get(),cantLocal,cantBodega)
     cuadroMarca.delete(0,END)
     cuadroCod.delete(0,END)
     cuadroPrec.delete(0,END)
     cuadroNombre.delete(0,END)
+    cuadroLocal.delete(0,END)
+    cuadroBodega.delete(0,END)
 
-def nuevos_datos(nombre,codigo,precio,marca):
-    datos=[nombre,0,codigo,precio,marca]
+def nuevos_datos(nombre,codigo,precio,marca,cantLocal,cantBodega):
+    datos=[nombre,0,codigo,precio,marca,cantLocal,cantBodega]
     CON_PROC.agregarprod(datos)
 
 def actualizar_stock(cant,opcion):
@@ -218,3 +250,11 @@ def mostrarLabel(labelNombre,labelCodigo,labelPrecio,labelMarca,dato):
     labelCodigo['text']=str(datos[3])
     labelPrecio['text']=str(datos[4])
     labelMarca['text']=str(datos[5])
+
+def eliminar_producto(nombre,codigo,labelNom,labelCod,labelPrec,labelMarca):
+    dato=[nombre['text'],codigo['text']]
+    labelNom['text']=''
+    labelCod['text']=''
+    labelPrec['text']=''
+    labelMarca['text']=''
+    CON_PROC.eliminarProd(dato)
