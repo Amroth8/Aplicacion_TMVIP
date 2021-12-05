@@ -34,6 +34,7 @@ def buscarprod (datos)  :
                         
 def buscarprodUnico (nom,codigo)  :
     resultados=[]
+    resultadosTotales=[]
     try :
         conexion = mysql.connector.connect(
         host = 'localhost',
@@ -48,6 +49,16 @@ def buscarprodUnico (nom,codigo)  :
             sentencia = "SELECT * FROM producto WHERE nom='{}' and cod_bar={}"
             cursor.execute(sentencia.format(nom,codigo))
             resultados = cursor.fetchall()
+            id_prod=resultados[0][0]
+            resultadosTotales=resultados[0]
+            sentencia = "SELECT cant FROM stock_bodega WHERE id_prod={} and id_bod={}"
+            cursor.execute(sentencia.format(id_prod,1))
+            resultados = cursor.fetchall()
+            resultadosTotales+=resultados[0]
+            sentencia = "SELECT cant FROM stock_local WHERE id_prod={} and id_loc={}"
+            cursor.execute(sentencia.format(id_prod,1))
+            resultados = cursor.fetchall()
+            resultadosTotales+=resultados[0]
         else    :
             print("Dato no encontrado") 
     except Error as ex :
@@ -56,8 +67,8 @@ def buscarprodUnico (nom,codigo)  :
         if  conexion.is_connected() :
             conexion.close() #cierro conexion con la base
             print("Conexion finalizada.")
-            return resultados[0]
-        return resultados[0]
+            return resultadosTotales
+        return resultadosTotales
 
 #Agregar producto
 def agregarprod (datos)  :
@@ -264,6 +275,38 @@ def stockBodega ( )  :
             print("Conexion finalizada.")
             return resultados
         return resultados 
+
+def actualizarStockLocal (nom,cod,cant)  :
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+    )
+        if conexion.is_connected() :
+            print("conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "SELECT id_prod,cant FROM producto WHERE cod_bar = {} and nom='{}'"
+            cursor.execute(sentencia.format(cod,nom))
+            resultados = cursor.fetchall()
+            id_producto=resultados[0][0]
+            sentencia = "UPDATE producto SET cant={} WHERE id_prod = {} "
+            cursor.execute(sentencia.format(resultados[0][1]+cant,id_producto))
+            sentencia = "SELECT cant FROM stock_local WHERE id_prod = {} and id_loc={}"
+            cursor.execute(sentencia.format(id_producto,1))
+            resultados = cursor.fetchall()
+            sentencia = "UPDATE stock_local SET cant={} WHERE id_prod={} and id_loc={}"
+            cursor.execute(sentencia.format(resultados[0][0]+cant,id_producto,1))
+            conexion.commit()
+            print("Registro actualizado con exito") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
 
     
     #PPRUEBAS

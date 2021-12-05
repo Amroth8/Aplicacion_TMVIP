@@ -210,11 +210,30 @@ def añadir_productos(cuadroNombre,cuadroCod,cuadroPrec,cuadroMarca,cuadroLocal,
     cuadroBodega.delete(0,END)
 
 def nuevos_datos(nombre,codigo,precio,marca,cantLocal,cantBodega):
-    datos=[nombre,0,codigo,precio,marca,cantLocal,cantBodega]
+    datos=[nombre,int(cantLocal)+int(cantBodega),codigo,precio,marca,cantLocal,cantBodega]
     CON_PROC.agregarprod(datos)
 
-def actualizar_stock(cant,opcion):
-    print(cant)
+def cantCorrecta(cant,label):
+    try:
+        cant=int(cant)
+        if cant<=0:
+            label['text']='Cantidad menor o igual a 0'
+            return False
+        return True
+    except:
+        label['text']='Tipo de dato erroneo'
+        return False
+
+def actualizar_stock(cant,opcion,label,nom,cod):
+    label['text']=""
+    if nom['text']==" " or cod['text']==" ":
+        label['text']="Seleccione un Producto"
+    elif opcion == 'None':
+        label['text']="Marque un destino"
+    elif cantCorrecta(cant,label):
+        if opcion == 'Tienda':
+            CON_PROC.actualizarStockLocal(nom['text'],cod['text'],int(cant))
+
 
 def actualizarLista(buscarCuadro_revVentas,busqueda):
     lista=CON_PROC.buscarprod(busqueda)
@@ -235,8 +254,16 @@ def actualizarListaFechas(buscarCuadro_revVentas,busqueda,opcionFecha,opcionOrde
     lista.append(opcionFecha)
     buscarCuadro_revVentas['values']=tuple(lista)
 
-def MostrarStock(text):
-    print(text)
+def MostrarStock(combobox,nombre,codigo,precio,marca,stock,bodega,local):
+    cod,nom=separNomCod(combobox.get())
+    datos=list(CON_PROC.buscarprodUnico(nom,cod))
+    nombre['text']=str(datos[1])
+    codigo['text']=str(datos[3])
+    precio['text']=str(datos[4])
+    marca['text']=str(datos[5])
+    stock['text']=str(datos[2])
+    bodega['text']=str(datos[6])
+    local['text']=str(datos[7])
 
 def actualizarListaStock(buscarCuadro_revVentas,busqueda,opcionStock):
     lista=list(buscarCuadro_revVentas['values'])

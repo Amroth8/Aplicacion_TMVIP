@@ -764,10 +764,7 @@ actStockFrame.grid_propagate(False)
 #espacio extra...
 buscarProdLabel_actStock = Label(actStockFrame, text="            ")
 buscarProdLabel_actStock.config(bg=back)
-buscarProdLabel_actStock.grid(
-    row=0,
-    column=0,
-    sticky=NSEW)
+buscarProdLabel_actStock.grid(row=0, column=0,sticky=NSEW)
     #label
 buscarProdLabel_actStock = Label(actStockFrame, text="Actualizar Stock",font="arial")
 buscarProdLabel_actStock.config(bg=back,fg=fgn)
@@ -789,7 +786,7 @@ buscarCuadro_actStock.grid(
     #boton buscar
 buscarBoton_actStock = Button(
     actStockFrame, 
-    text="Buscar:",
+    text=" Buscar ",
     bg=bt1,fg=btfg,
     command=lambda *args :Func.actualizarLista(buscarCuadro_actStock,buscarCuadro_actStock.get())
 )
@@ -802,50 +799,111 @@ buscarBoton_actStock.grid(
 labelNombre_actStock = Label(actStockFrame, text="Nombre: ")
 labelNombre_actStock.config(bg=back,fg=btfg)
 labelNombre_actStock.grid(
-    row=2, 
+    row=3, 
     column=1,
     sticky=W
 )
 laberCod_actStock = Label(actStockFrame, text="Codigo de Barra: ")
 laberCod_actStock.config(bg=back,fg=btfg)
 laberCod_actStock.grid(
-    row=3, 
+    row=4, 
     column=1,
     sticky=W
 )
 labelPrec_actStock = Label(actStockFrame, text="Precio: ")
 labelPrec_actStock.config(bg=back,fg=btfg)
 labelPrec_actStock.grid(
-    row=4, 
+    row=5, 
     column=1,
     sticky=W
 )
 labelMarca_actStock = Label(actStockFrame, text="Marca: ")
 labelMarca_actStock.config(bg=back,fg=btfg)
 labelMarca_actStock.grid(
-    row=5, 
-    column=1,
-    sticky=W
-)
-labelMarca_actStock = Label(actStockFrame, text="Stock General: ")
-labelMarca_actStock.config(bg=back,fg=btfg)
-labelMarca_actStock.grid(
     row=6, 
     column=1,
     sticky=W
 )
-labelMarca_actStock = Label(actStockFrame, text="Stock Bodega: ")
-labelMarca_actStock.config(bg=back,fg=btfg)
-labelMarca_actStock.grid(
+labelStock_actStock = Label(actStockFrame, text="Stock General: ")
+labelStock_actStock.config(bg=back,fg=btfg)
+labelStock_actStock.grid(
     row=7, 
     column=1,
     sticky=W
 )
-labelMarca_actStock = Label(actStockFrame, text="Stock Tienda: ")
-labelMarca_actStock.config(bg=back,fg=btfg)
-labelMarca_actStock.grid(
+labelBodega_actStock = Label(actStockFrame, text="Stock Bodega: ")
+labelBodega_actStock.config(bg=back,fg=btfg)
+labelBodega_actStock.grid(
     row=8, 
     column=1,
+    sticky=W
+)
+labelLocal_actStock = Label(actStockFrame, text="Stock Tienda: ")
+labelLocal_actStock.config(bg=back,fg=btfg)
+labelLocal_actStock.grid(
+    row=9, 
+    column=1,
+    sticky=W
+)
+
+labelNombreMostrar_actStock = Label(actStockFrame, text=" ")
+labelNombreMostrar_actStock.config(bg=back,fg=btfg)
+labelNombreMostrar_actStock.grid(
+    row=3, 
+    column=2,
+    sticky=W
+)
+laberCodMostrar_actStock = Label(actStockFrame, text=" ")
+laberCodMostrar_actStock.config(bg=back,fg=btfg)
+laberCodMostrar_actStock.grid(
+    row=4, 
+    column=2,
+    sticky=W
+)
+labelPrecMostrar_actStock = Label(actStockFrame, text=" ")
+labelPrecMostrar_actStock.config(bg=back,fg=btfg)
+labelPrecMostrar_actStock.grid(
+    row=5, 
+    column=2,
+    sticky=W
+)
+labelMarcaMostrar_actStock = Label(actStockFrame, text=" ")
+labelMarcaMostrar_actStock.config(bg=back,fg=btfg)
+labelMarcaMostrar_actStock.grid(
+    row=6, 
+    column=2,
+    sticky=W
+)
+labelStockMostrar_actStock = Label(actStockFrame, text=" ")
+labelStockMostrar_actStock.config(bg=back,fg=btfg)
+labelStockMostrar_actStock.grid(
+    row=7, 
+    column=2,
+    sticky=W
+)
+labelBodegaMostrar_actStock = Label(actStockFrame, text=" ")
+labelBodegaMostrar_actStock.config(bg=back,fg=btfg)
+labelBodegaMostrar_actStock.grid(
+    row=8, 
+    column=2,
+    sticky=W
+)
+labelLocalMostrar_actStock = Label(actStockFrame, text=" ")
+labelLocalMostrar_actStock.config(bg=back,fg=btfg)
+labelLocalMostrar_actStock.grid(
+    row=9, 
+    column=2,
+    sticky=W
+)
+mostrarBoton_actStock = Button(
+    actStockFrame, 
+    text="Mostrar",
+    bg=bt1,fg=btfg,
+    command=lambda *args :Func.MostrarStock(buscarCuadro_actStock,labelNombreMostrar_actStock,laberCodMostrar_actStock,labelPrecMostrar_actStock,labelMarcaMostrar_actStock,labelStockMostrar_actStock,labelBodegaMostrar_actStock,labelLocalMostrar_actStock)
+)
+mostrarBoton_actStock.grid(
+    row=2,
+    column=4,
     sticky=W
 )
     #label
@@ -896,12 +954,19 @@ cuadroCant_actStock.grid(
     column=5,
     sticky=NSEW
 )
+labelError_actStock= Label(actStockFrame, text="",font=("arial",11))
+labelError_actStock.config(bg=back,fg='red')
+labelError_actStock.grid(
+    row=7, 
+    column=5,
+    sticky=W
+)
     #boton actualizar
 actualizarBoton_actStock = Button(
     actStockFrame, 
     text="Actualizar",
     bg=bt1,fg=btfg,
-    command=lambda:Func.actualizar_stock(cuadroCant_actStock.get(),opcionesIngreso.get())
+    command=lambda:Func.actualizar_stock(cuadroCant_actStock.get(),opcionesIngreso.get(),labelError_actStock,labelNombreMostrar_actStock,laberCodMostrar_actStock)
 )
 actualizarBoton_actStock.grid(
     row=6,
