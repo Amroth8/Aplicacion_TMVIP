@@ -135,6 +135,8 @@ def separNomCod(dato):
     else:
         codigo=dato[len(dato)-pos:]
     dato=dato[:len(dato)-pos-1]
+    if dato[0]=='{':
+        dato=dato[1:len(dato)-1]
     return codigo,dato
 
 def actualizar_datos(nombre,codigo,precio,marca,label,datoAntiguo):
@@ -224,7 +226,7 @@ def cantCorrecta(cant,label):
         label['text']='Tipo de dato erroneo'
         return False
 
-def actualizar_stock(cant,opcion,label,nom,cod):
+def actualizar_stock(cant,opcion,label,nom,cod,opcionLocal):
     _cant=cant.get()
     cant.delete(0,END)
     label['text']=""
@@ -234,7 +236,13 @@ def actualizar_stock(cant,opcion,label,nom,cod):
         label['text']="Marque un destino"
     elif cantCorrecta(_cant,label):
         if opcion == 'Tienda':
-            CON_PROC.actualizarStockLocal(nom['text'],cod['text'],int(_cant))
+            if opcionLocal=='0':
+                CON_PROC.actualizarStockLocal(nom['text'],cod['text'],int(_cant))
+            elif opcionLocal=='1':
+                if not(CON_PROC.actualizarStockLocalBodega(nom['text'],cod['text'],int(_cant))):
+                    label['text']="No hay cantidad suficiente en bodega"
+            else:
+                label['text']="Marque una opcion"
         elif opcion == 'Bodega':
             CON_PROC.actualizarStockBodega(nom['text'],cod['text'],int(_cant))
 
@@ -289,3 +297,13 @@ def eliminar_producto(nombre,codigo,labelNom,labelCod,labelPrec,labelMarca):
     labelPrec['text']=''
     labelMarca['text']=''
     CON_PROC.eliminarProd(dato)
+
+def mostrar_opciones(label,rbS,rbN):
+    rbN.grid(row=3,column=6,sticky=W)
+    rbS.grid(row=2,column=6,sticky=W)
+    label.grid(row=1,column=6,sticky=W)
+
+def esconder_opciones(label,rbS,rbN):
+        rbS.grid_remove()
+        rbN.grid_remove()
+        label.grid_remove()

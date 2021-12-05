@@ -914,26 +914,47 @@ listaDatosLabel_actStock.grid(
     column=5,
     sticky=W
 )
+preguntaLabel_actStock = Label(actStockFrame, text="Desde la Bodega?",font=("arial",10))
+preguntaLabel_actStock.config(bg=back,fg=fgn)
+opcionesTienda = StringVar()
+opcionesTienda.set(None)
+    #radio boton para las opciones de insertar el stock
+si_verStock = Radiobutton(
+    actStockFrame, 
+    text="Si",
+    value=1,
+    bg=back,fg=btfg,
+    variable=opcionesTienda
+)
+no_verStock = Radiobutton(
+    actStockFrame, 
+    text="No",
+    value=0,
+    bg=back,fg=btfg,
+    variable=opcionesTienda
+)
 opcionesIngreso = StringVar()
 opcionesIngreso.set(None)
     #radio boton para las opciones de insertar el stock
-rb_semanal_verStock = Radiobutton(
+rb_tienda_verStock = Radiobutton(
     actStockFrame, 
     text="Tienda",
     value='Tienda',
     bg=back,fg=btfg,
-    variable=opcionesIngreso
+    variable=opcionesIngreso,
+    command=lambda *args:Func.mostrar_opciones(preguntaLabel_actStock,si_verStock,no_verStock)
 ).grid(
     row=2,
     column=5,
     sticky=W
 )
-rb_mensual_verStock = Radiobutton(
+rb_bodega_verStock = Radiobutton(
     actStockFrame, 
     text="Bodega",
     value='Bodega',
     bg=back,fg=btfg,
-    variable=opcionesIngreso
+    variable=opcionesIngreso,
+    command=lambda *args:Func.esconder_opciones(preguntaLabel_actStock,si_verStock,no_verStock)
 ).grid(
     row=3,
     column=5,
@@ -966,7 +987,7 @@ actualizarBoton_actStock = Button(
     actStockFrame, 
     text="Actualizar",
     bg=bt1,fg=btfg,
-    command=lambda:Func.actualizar_stock(cuadroCant_actStock,opcionesIngreso.get(),labelError_actStock,labelNombreMostrar_actStock,laberCodMostrar_actStock)
+    command=lambda:Func.actualizar_stock(cuadroCant_actStock,opcionesIngreso.get(),labelError_actStock,labelNombreMostrar_actStock,laberCodMostrar_actStock,opcionesTienda.get())
 )
 actualizarBoton_actStock.grid(
     row=6,
