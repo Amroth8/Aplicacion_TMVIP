@@ -225,14 +225,18 @@ def cantCorrecta(cant,label):
         return False
 
 def actualizar_stock(cant,opcion,label,nom,cod):
+    _cant=cant.get()
+    cant.delete(0,END)
     label['text']=""
     if nom['text']==" " or cod['text']==" ":
         label['text']="Seleccione un Producto"
     elif opcion == 'None':
         label['text']="Marque un destino"
-    elif cantCorrecta(cant,label):
+    elif cantCorrecta(_cant,label):
         if opcion == 'Tienda':
-            CON_PROC.actualizarStockLocal(nom['text'],cod['text'],int(cant))
+            CON_PROC.actualizarStockLocal(nom['text'],cod['text'],int(_cant))
+        elif opcion == 'Bodega':
+            CON_PROC.actualizarStockBodega(nom['text'],cod['text'],int(_cant))
 
 
 def actualizarLista(buscarCuadro_revVentas,busqueda):

@@ -966,7 +966,7 @@ actualizarBoton_actStock = Button(
     actStockFrame, 
     text="Actualizar",
     bg=bt1,fg=btfg,
-    command=lambda:Func.actualizar_stock(cuadroCant_actStock.get(),opcionesIngreso.get(),labelError_actStock,labelNombreMostrar_actStock,laberCodMostrar_actStock)
+    command=lambda:Func.actualizar_stock(cuadroCant_actStock,opcionesIngreso.get(),labelError_actStock,labelNombreMostrar_actStock,laberCodMostrar_actStock)
 )
 actualizarBoton_actStock.grid(
     row=6,

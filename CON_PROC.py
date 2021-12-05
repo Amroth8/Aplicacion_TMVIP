@@ -308,6 +308,38 @@ def actualizarStockLocal (nom,cod,cant)  :
             conexion.close() #cierro conexion con la base
             print("Conexion finalizada.")
 
+def actualizarStockBodega (nom,cod,cant)  :
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+    )
+        if conexion.is_connected() :
+            print("conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "SELECT id_prod,cant FROM producto WHERE cod_bar = {} and nom='{}'"
+            cursor.execute(sentencia.format(cod,nom))
+            resultados = cursor.fetchall()
+            id_producto=resultados[0][0]
+            sentencia = "UPDATE producto SET cant={} WHERE id_prod = {} "
+            cursor.execute(sentencia.format(resultados[0][1]+cant,id_producto))
+            sentencia = "SELECT cant FROM stock_bodega WHERE id_prod = {} and id_bod={}"
+            cursor.execute(sentencia.format(id_producto,1))
+            resultados = cursor.fetchall()
+            sentencia = "UPDATE stock_bodega SET cant={} WHERE id_prod={} and id_bod={}"
+            cursor.execute(sentencia.format(resultados[0][0]+cant,id_producto,1))
+            conexion.commit()
+            print("Registro actualizado con exito") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+
     
     #PPRUEBAS
 nombre = 'azucar '#'coca cola' #"pampita"
