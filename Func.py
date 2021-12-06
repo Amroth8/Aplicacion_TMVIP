@@ -1,4 +1,6 @@
+from logging import lastResort
 from tkinter import *
+from tkinter import ttk
 import CON_PROC
 
 def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
@@ -293,28 +295,32 @@ def actualizarListaFechas(buscarCuadro_revVentas,busqueda,opcionFecha,opcionOrde
     buscarCuadro_revVentas['values']=tuple(lista)
 
 def MostrarStock(combobox,nombre,codigo,precio,marca,stock,bodega,local):
-    cod,nom=separNomCod(combobox.get())
-    datos=list(CON_PROC.buscarprodUnico(nom,cod))
-    nombre['text']=str(datos[1])
-    codigo['text']=str(datos[3])
-    precio['text']=str(datos[4])
-    marca['text']=str(datos[5])
-    stock['text']=str(datos[2])
-    bodega['text']=str(datos[6])
-    local['text']=str(datos[7])
+    if combobox.get() != '':
+        cod,nom=separNomCod(combobox.get())
+        datos=list(CON_PROC.buscarprodUnico(nom,cod))
+        nombre['text']=str(datos[1])
+        codigo['text']=str(datos[3])
+        precio['text']=str(datos[4])
+        marca['text']=str(datos[5])
+        stock['text']=str(datos[2])
+        bodega['text']=str(datos[6])
+        local['text']=str(datos[7])
 
 def actualizarListaStock(buscarCuadro_revVentas,busqueda,opcionStock):
-    lista=list(buscarCuadro_revVentas['values'])
-    lista.append(busqueda)
-    buscarCuadro_revVentas['values']=tuple(lista)
+    lista=CON_PROC.buscarprod(busqueda)
+    aux=[]
+    for fila in lista:
+        aux.append([fila[1],fila[3]])
+    buscarCuadro_revVentas['values']=tuple(aux)
 
 def mostrarLabel(labelNombre,labelCodigo,labelPrecio,labelMarca,dato):
-    codigo,dato=separNomCod(dato)
-    datos=list(CON_PROC.buscarprodUnico(dato,codigo))
-    labelNombre['text']=str(datos[1])
-    labelCodigo['text']=str(datos[3])
-    labelPrecio['text']=str(datos[4])
-    labelMarca['text']=str(datos[5])
+    if dato != '':
+        codigo,dato=separNomCod(dato)
+        datos=list(CON_PROC.buscarprodUnico(dato,codigo))
+        labelNombre['text']=str(datos[1])
+        labelCodigo['text']=str(datos[3])
+        labelPrecio['text']=str(datos[4])
+        labelMarca['text']=str(datos[5])
 
 def eliminar_producto(nombre,codigo,labelNom,labelCod,labelPrec,labelMarca):
     dato=[nombre['text'],codigo['text']]
@@ -333,3 +339,67 @@ def esconder_opciones(label,rbS,rbN):
         rbS.grid_remove()
         rbN.grid_remove()
         label.grid_remove()
+
+def mostrar_combobox_verStock(combobox,buttom):
+    buttom.grid(row=5,column=2,sticky=NSEW)
+    combobox.grid(row=5,column=1,sticky=NSEW)
+
+def esconder_combobox_verStock(combobox,buttom):
+    buttom.grid_remove()
+    combobox.grid_remove()
+
+def frame_verStock(frame,resultado,opcion):
+    for widget in frame.winfo_children():
+        widget.destroy()
+    if opcion=='Producto':
+        resultado=resultado[0]
+        label='Stock General de '+resultado[0]+' ('+str(resultado[1])+') '+resultado[3]+' $'+str(resultado[2])
+        labelNombre=Label(frame,text=label)
+        labelNombre.pack()
+        tree=ttk.Treeview(frame,column=("c1","c2"),show='headings')
+        tree.column("# 1",anchor=CENTER,width=120)
+        tree.heading("# 1",text='Almacenamiento')
+        tree.column("# 2",anchor=CENTER,width=100)
+        tree.heading("# 2",text='Cantidad')
+        tree.insert('', 'end',text= "1",values=('General',resultado[4]))
+        tree.insert('', 'end',text= "1",values=(resultado[8],resultado[7]))
+        tree.insert('', 'end',text= "1",values=(resultado[6],resultado[5]))
+        tree.pack()
+    else:  
+        tree=ttk.Treeview(frame,column=("c1","c2","c3","c4","c5"),show='headings')
+        tree.column("# 1",anchor=CENTER,width=70)
+        tree.heading("# 1",text='Nombre')
+        tree.column("# 2",anchor=CENTER,width=100)
+        tree.heading("# 2",text='Codigo Barra')
+        tree.column("# 3",anchor=CENTER,width=70)
+        tree.heading("# 3",text='Precio')
+        tree.column("# 4",anchor=CENTER,width=70)
+        tree.heading("# 4",text='Marca')
+        tree.column("# 5",anchor=CENTER,width=70)
+        tree.heading("# 5",text='Cantidad')
+        for dato in resultado:
+            tree.insert('', 'end',text= "1",values=dato)
+        if opcion=='Bodega': 
+            labelNombre=Label(frame,text='Stock en Bodega')
+            labelNombre.pack()
+            tree.pack()
+        elif opcion=='Tienda':
+            labelNombre=Label(frame,text='Stock en Tienda')
+            labelNombre.pack()
+            tree.pack()
+
+def GenerarInformeStock(datosProd,opcion,frame):
+    resultado=[]
+    if opcion=='Producto':
+        if datosProd!='':
+            codigo,nombre=separNomCod(datosProd)
+            resultado=CON_PROC.stock_producto(nombre,codigo)
+            frame_verStock(frame,resultado,opcion)
+    elif opcion=='Bodega':
+        sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sb.cant,b.direcb from producto as p, stock_bodega as sb, bodega as b where sb.id_bod=b.id_bod and b.id_bod=1 and sb.id_prod=p.id_prod;"
+        resultado=CON_PROC.stocks_loc_bod(sentecia)
+        frame_verStock(frame,resultado,opcion)
+    elif opcion=='Tienda':
+        sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod;"
+        resultado=CON_PROC.stocks_loc_bod(sentecia)
+        frame_verStock(frame,resultado,opcion)
