@@ -51,8 +51,34 @@ def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
         actStock.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
         actStock.grid_propagate(False)
 
-def buscar(text):
-    print(text)
+def buscarAdmVentas(dato,lbox):
+    resultados=CON_PROC.buscarprod(dato)
+    lbox.delete(0, END)
+    print(resultados)
+    for item in range(len(resultados)):
+        lbox.insert(END, str(resultados[item][0])+') '+resultados[item][1]+' '+resultados[item][5]+' - '+str(resultados[item][4]))
+        lbox.itemconfig(item)
+
+def agregarAdmVentas(lbox, lbox2):
+    selecciones=[]
+    seleccion = lbox.curselection()
+    for i in seleccion:
+        ag = lbox.get(i)
+        selecciones.append(ag)
+    for item in range(len(selecciones)):
+        lbox2.insert(END, selecciones[item])
+        lbox2.itemconfig(item)
+        
+def borrarAdmVentas(lbox):
+    seleccion = lbox.curselection()
+    pos = 0
+    for i in seleccion:
+        indice = int(i) - pos
+        lbox.delete(indice,indice)
+        pos = pos + 1
+
+def exportarAdmVentas(lbox):
+    print('excel')
 
 def verificar_datos_act(codigo,precio,label):
     try:

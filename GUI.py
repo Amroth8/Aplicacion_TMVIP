@@ -28,7 +28,7 @@ root.config(bg=back, bd=25)
 #frame opciones
 opcionesFrame = Frame()
 opcionesFrame.pack(
-    fill="both", 
+    fill="both",
     expand="True"
 )
 opcionesFrame.config(bg=back)
@@ -38,15 +38,15 @@ opcionesFrame.config(width="650", height="350")
 #frame ventas
 ventasFrame = Frame(opcionesFrame)
 ventasFrame.config(
-    bg= back, 
+    bg= back,
     width=600,
-    height=510
+    height=550
 )
 ventasFrame.grid(
-    row=0, 
-    rowspan=100, 
-    column=1, 
-    columnspan=100, 
+    row=0,
+    rowspan=100,
+    column=1,
+    columnspan=100,
     sticky=NSEW
 )
 ventasFrame.grid_propagate(False)
@@ -63,8 +63,8 @@ buscarLabel_ventas.grid(
 buscarLabel_ventas = Label(ventasFrame, text="Realizar Venta", font="arial")
 buscarLabel_ventas.config(bg=back,fg=fgn)
 buscarLabel_ventas.grid(
-    row=0, 
-    column=1, 
+    row=0,
+    column=1,
     columnspan=6,
     sticky=NSEW
 )
@@ -72,23 +72,78 @@ buscarLabel_ventas.grid(
 buscarLabel_ventas = Label(ventasFrame, text="Buscar producto", font=("arial",t_subt+1))
 buscarLabel_ventas.config(bg=back, fg=fgn)
 buscarLabel_ventas.grid(
-    row=1, 
-    column=1, 
+    row=1,
+    column=1,
     sticky=NSEW
 )
     #cuadro
 buscarCuadro_ventas = Entry(ventasFrame)
 buscarCuadro_ventas.config(fg=fgn)
 buscarCuadro_ventas.grid(
-    row=2, 
+    row=2,
     column=1,
     sticky=NSEW
 )
+    #lista de la busqueda
+listaBusq_ventas = Listbox(ventasFrame, selectmode = "multiple")
+listaBusq_ventas.pack(side=LEFT,fill=BOTH)
+listaBusq_ventas.config(
+    bg="#ffffff",
+    bd=3,
+    relief=SUNKEN,
+    width=25,
+    height=18
+)
+listaBusq_ventas.grid(
+    row=3,
+    column=1,
+    columnspan=2,
+    sticky=NSEW
+)
+listaBusq_ventas.propagate(0)
+    #scroll para la lista
+scrollBusqueda_ventas = Scrollbar(listaBusq_ventas)
+scrollBusqueda_ventas.pack(side=RIGHT, fill=Y)
+        ##bucle para mostrar toda la busqueda
+        #marcar los productos
+
+
+
+#lista de productos de la venta
+listaLabel_ventas = Label(ventasFrame, text="    Lista de Productos", font=("arial",t_subt+1))
+listaLabel_ventas.config(bg=back,fg=fgn)
+listaLabel_ventas.grid(
+    row=1,
+    column=3,
+    sticky=NSEW
+)
+listaProd_ventas = Listbox(ventasFrame)
+listaProd_ventas.pack(side=LEFT,fill=BOTH)
+listaProd_ventas.config(
+    bg="#ffffff",
+    bd=3,
+    relief=SUNKEN,
+    width=25,
+    height=18
+)
+listaProd_ventas.grid(
+    row=3,
+    column=3,
+    columnspan=2,
+    sticky=NSEW
+)
+listaProd_ventas.propagate(0)
+scrollProd_ventas = Scrollbar(listaProd_ventas)
+scrollProd_ventas.pack(side=RIGHT, fill=Y)
+
+
+
+
     #boton
 buscarBoton_ventas = Button(
-    ventasFrame, 
+    ventasFrame,
     text="Buscar",
-    command=lambda:Func.buscar(buscarCuadro_ventas.get())
+    command=lambda:Func.buscarAdmVentas(buscarCuadro_ventas.get(), listaBusq_ventas)
 ) #, command = funcion para insertar frame
 buscarBoton_ventas.config(bg=bt1, fg=btfg)
 buscarBoton_ventas.grid(
@@ -98,39 +153,67 @@ buscarBoton_ventas.grid(
 )
 buscarBoton_ventas.config(
     cursor="hand2",
-    pady=1, 
+    pady=1,
     padx=4,
     bd=2,
     overrelief="raised"
 )
-    #lista de la busqueda
-listaBusqFrame_ventas = Frame(ventasFrame)
-listaBusqFrame_ventas.config(
-    bg="#ffffff",
-    bd=3, 
-    relief=SUNKEN, 
-    width=150, 
-    height=400
-)
-listaBusqFrame_ventas.grid(
-    row=3, 
-    column=1,
-    columnspan=2, 
+
+agregarBoton_ventas = Button(
+    ventasFrame,
+    text="Agregar",
+    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas)
+) #, command = funcion para insertar frame
+agregarBoton_ventas.config(bg=bt1, fg=btfg)
+agregarBoton_ventas.grid(
+    row=4,
+    column=2,
     sticky=NSEW
 )
-listaBusqFrame_ventas.propagate(0)
-    #scroll para la lista
-scrollBusqueda_ventas = ttk.Scrollbar(listaBusqFrame_ventas)
-scrollBusqueda_ventas.pack(side=RIGHT, fill=Y)
-        ##bucle para mostrar toda la busqueda
-        #marcar los productos
-    #lista de productos de la venta
-listaLabel_ventas = Label(ventasFrame, text="    Lista de Productos", font=("arial",t_subt+1))
-listaLabel_ventas.config(bg=back,fg=fgn)
-listaLabel_ventas.grid(
-    row=1, 
-    column=3,
+agregarBoton_ventas.config(
+    cursor="hand2",
+    pady=1,
+    padx=4,
+    bd=2,
+    overrelief="raised"
+)
+
+borrarBoton_ventas = Button(
+    ventasFrame,
+    text="Borrar",
+    command=lambda:Func.borrarAdmVentas(listaProd_ventas)
+) #, command = funcion para insertar frame
+borrarBoton_ventas.config(bg=bt1, fg=btfg)
+borrarBoton_ventas.grid(
+    row=4,
+    column=4,
     sticky=NSEW
+)
+borrarBoton_ventas.config(
+    cursor="hand2",
+    pady=1,
+    padx=4,
+    bd=2,
+    overrelief="raised"
+)
+
+exportarBoton_ventas = Button(
+    ventasFrame,
+    text="Exportar",
+    command=lambda:Func.exportarAdmVentas(listaProd_ventas)
+) #, command = funcion para insertar frame
+exportarBoton_ventas.config(bg=bt1, fg=btfg)
+exportarBoton_ventas.grid(
+    row=5,
+    column=4,
+    sticky=NSEW
+)
+exportarBoton_ventas.config(
+    cursor="hand2",
+    pady=1,
+    padx=4,
+    bd=2,
+    overrelief="raised"
 )
 
 
@@ -156,14 +239,14 @@ buscarVentasLabel_revVentas.config(bg=back,fg=fgn)
 buscarVentasLabel_revVentas.grid(
     row=1,
     column=2,
-    columnspan=6, 
+    columnspan=6,
     sticky=NSEW
 )
     #label
 tipoInfVentasLabel_revVentas = Label(revVentasFrame, text="Seleccione Tipo de Informe", font=("arial",t_subt+1))
 tipoInfVentasLabel_revVentas.config(bg=back,fg=fgn)
 tipoInfVentasLabel_revVentas.grid(
-    row=1, 
+    row=1,
     column=1,
     sticky=W   
 )
@@ -171,7 +254,7 @@ tipoInfVentasLabel_revVentas.grid(
 tipoInfVentasLabel_revVentas = Label(revVentasFrame, text="Seleccione Periodo de Tiempo",font=("arial",t_subt))
 tipoInfVentasLabel_revVentas.config(bg=back,fg=btfg)
 tipoInfVentasLabel_revVentas.grid(
-    row=7, 
+    row=7,
     column=1,
     sticky=NSEW
 )
@@ -181,7 +264,7 @@ opcionOrden = StringVar()
 opcionOrden.set(None)
     #radio boton para las opciones de informe de ventas
 rb_semanal = Radiobutton(
-    revVentasFrame, 
+    revVentasFrame,
     text="Informe semanal",
     value='Semanal',
     bg=back,fg=btfg,
@@ -192,7 +275,7 @@ rb_semanal = Radiobutton(
     sticky=W
 )
 rb_mensual = Radiobutton(
-    revVentasFrame, 
+    revVentasFrame,
     text="Informe mensual",
     value='Mensual',
     bg=back,fg=btfg,
@@ -203,7 +286,7 @@ rb_mensual = Radiobutton(
     sticky=W
 )
 rb_masVendidos = Radiobutton(
-    revVentasFrame, 
+    revVentasFrame,
     text="Mas vendidos",
     value='Mas',
     bg=back,fg=btfg,
@@ -214,7 +297,7 @@ rb_masVendidos = Radiobutton(
     sticky=W
 )
 rb_menosVendidos = Radiobutton(
-    revVentasFrame, 
+    revVentasFrame,
     text="Menos vendidos",
     value='Menos',
     bg=back,fg=btfg,
@@ -230,14 +313,14 @@ buscarCuadro_revVentas = ttk.Combobox(
     values=Fechas
 )
 buscarCuadro_revVentas.grid(
-    row=8, 
+    row=8,
     column=1,
-    columnspan=1, 
+    columnspan=1,
     sticky=NSEW
 )
     #boton
 buscarBoton_revVentas = Button(
-    revVentasFrame, 
+    revVentasFrame,
     text="Buscar",
     command=lambda *args :Func.actualizarListaFechas(buscarCuadro_revVentas,buscarCuadro_revVentas.get(),opcionFecha.get(),opcionOrden.get())
 )
@@ -251,13 +334,13 @@ buscarBoton_revVentas.grid(
 tipoInfVentasLabel_revVentas = Label(revVentasFrame, text="Seleccione Orden",font=("arial",t_subt))
 tipoInfVentasLabel_revVentas.config(bg=back,fg=btfg)
 tipoInfVentasLabel_revVentas.grid(
-    row=4, 
+    row=4,
     column=1,
     sticky=W
 )
 buscarBoton_revVentas.config(
     cursor="hand2",
-    pady=1, 
+    pady=1,
     padx=4,
     bd=2,
     overrelief="raised"
@@ -265,18 +348,18 @@ buscarBoton_revVentas.config(
     #lista de la busqueda
 listaBusqFrame_revVentas = Frame(revVentasFrame)
 listaBusqFrame_revVentas.config(
-    bd=3, 
-    relief=SUNKEN, 
-    width=250, 
+    bd=3,
+    relief=SUNKEN,
+    width=250,
     height=300
 )
 listaBusqFrame_revVentas.grid(
     padx=7,
     pady=1,
-    row=2, 
+    row=2,
     column=4,
-    rowspan=20, 
-    columnspan=2, 
+    rowspan=20,
+    columnspan=2,
     sticky=NSEW
 )
 listaBusqFrame_revVentas.propagate(0)
@@ -290,7 +373,7 @@ exportarBoton_revVentas.grid(
 )
 exportarBoton_revVentas.config(
     cursor="hand2",
-    pady=1, 
+    pady=1,
     padx=4,
     bg=bt1,fg=btfg,
     bd=2,
@@ -317,7 +400,7 @@ buscarProdLabel_actDatos.grid(
 buscarProdLabel_actDatos = Label(actDatosFrame, text="Buscar Producto",font="arial")
 buscarProdLabel_actDatos.config(bg=back,fg=fgn)
 buscarProdLabel_actDatos.grid(
-    row=0, 
+    row=0,
     column=1,
     sticky=NSEW
 )
@@ -328,14 +411,14 @@ buscarCuadro_actDatos = ttk.Combobox(
     width=50
 )
 buscarCuadro_actDatos.grid(
-    row=1, 
+    row=1,
     column=1,
     columnspan=2,
     sticky=NSEW
 )
     #boton buscar
 buscarBoton_actDatos = Button(
-    actDatosFrame, 
+    actDatosFrame,
     text="Buscar",
     bg=bt1,fg=btfg,
     command=lambda *args :Func.actualizarLista(buscarCuadro_actDatos,buscarCuadro_actDatos.get())
@@ -379,7 +462,7 @@ labelMarcaVar_actDatos.config(bg=back,fg=btfg)
 labelMarcaVar_actDatos.grid(row=6,column=2,sticky=W)
     #boton buscar
 mostrarBoton_actDatos = Button(
-    actDatosFrame, 
+    actDatosFrame,
     text="Mostrar",
     bg=bt1,fg=btfg,
     command=lambda:Func.mostrarLabel(labelNombreVar_actDatos,labelCodigoVar_actDatos,labelPrecioVar_actDatos,labelMarcaVar_actDatos,buscarCuadro_actDatos.get())
@@ -401,69 +484,69 @@ actualizarLabel_actDatos.grid(
 labelNombre_actDatos = Label(actDatosFrame, text="Nombre")
 labelNombre_actDatos.config(bg=back,fg=btfg)
 labelNombre_actDatos.grid(
-    row=2, 
-    column=4, 
+    row=2,
+    column=4,
     padx=30,
     sticky=E
 )
 laberCod_actDatos = Label(actDatosFrame, text="Codigo de Barra")
 laberCod_actDatos.config(bg=back,fg=btfg)
 laberCod_actDatos.grid(
-    row=3, 
-    column=4, 
+    row=3,
+    column=4,
     padx=30,
     sticky=E
 )
 labelPrec_actDatos = Label(actDatosFrame, text="Precio")
 labelPrec_actDatos.config(bg=back,fg=btfg)
 labelPrec_actDatos.grid(
-    row=4, 
-    column=4, 
+    row=4,
+    column=4,
     padx=30,
     sticky=E
 )
 labelMarca_actDatos = Label(actDatosFrame, text="Marca")
 labelMarca_actDatos.config(bg=back,fg=btfg)
 labelMarca_actDatos.grid(
-    row=5, 
-    column=4, 
+    row=5,
+    column=4,
     padx=30,
     sticky=E
 )
     #cuadros
 cuadroNombre_actDatos = Entry(actDatosFrame)
 cuadroNombre_actDatos.grid(
-    row=2, 
+    row=2,
     column=5,
-    columnspan=2, 
+    columnspan=2,
     sticky=NSEW
 )
 cuadroCod_actDatos = Entry(actDatosFrame)
 cuadroCod_actDatos.grid(
-    row=3, 
+    row=3,
     column=5,
-    columnspan=2, 
+    columnspan=2,
     sticky=NSEW
 )
 cuadroPrec_actDatos = Entry(actDatosFrame)
 cuadroPrec_actDatos.grid(
-    row=4, 
+    row=4,
     column=5,
-    columnspan=2, 
+    columnspan=2,
     sticky=NSEW
 )
 cuadroMarca_actDatos = Entry(actDatosFrame)
 cuadroMarca_actDatos.grid(
-    row=5, 
+    row=5,
     column=5,
-    columnspan=2, 
+    columnspan=2,
     sticky=NSEW
 )
 label_errorProd_actDatos=Label(actDatosFrame, text="Error")
 label_errorProd_actDatos.config(bg=back,fg='red')
     #boton actualizar
 actualizarBoton_actDatos = Button(
-    actDatosFrame, 
+    actDatosFrame,
     text="Actualizar",
     bg=bt1,fg=btfg,
     command=lambda:Func.actualizar_datos(cuadroNombre_actDatos,cuadroCod_actDatos,cuadroPrec_actDatos,cuadroMarca_actDatos,label_errorProd_actDatos,buscarCuadro_actDatos.get())
@@ -477,7 +560,7 @@ actualizarBoton_actDatos.grid(
 listaDatosLabel_actDatos = Label(actDatosFrame, text="Datos Actuales",font=("arial",t_subt))
 listaDatosLabel_actDatos.config(bg=back,fg=btfg)
 listaDatosLabel_actDatos.grid(
-    row=2, 
+    row=2,
     column=1,
     sticky=NSEW
 )
@@ -507,36 +590,36 @@ añadirProdFrame.grid_propagate(False)
 label_añadirProd = Label(añadirProdFrame, text="        Añadir Nuevos Productos", font="arial")
 label_añadirProd.config(bg=back,fg=fgn)
 label_añadirProd.grid(
-    row=0, 
-    column=0, 
+    row=0,
+    column=0,
     sticky=NSEW
 )
 labelNombre_añadirProd = Label(añadirProdFrame, text="Nombre: ")
 labelNombre_añadirProd.config(bg=back,fg=btfg)
 labelNombre_añadirProd.grid(
-    row=2, 
-    column=0, 
+    row=2,
+    column=0,
     sticky=E
 )
 laberCod_añadirProd = Label(añadirProdFrame, text="Codigo de Barra: ")
 laberCod_añadirProd.config(bg=back, fg=btfg)
 laberCod_añadirProd.grid(
-    row=3, 
-    column=0, 
+    row=3,
+    column=0,
     sticky=E
 )
 labelPrec_añadirProd = Label(añadirProdFrame, text="Precio: ")
 labelPrec_añadirProd.config(bg=back,fg=btfg)
 labelPrec_añadirProd.grid(
-    row=4, 
-    column=0, 
+    row=4,
+    column=0,
     sticky=E
 )
 labelMarca_añadirProd = Label(añadirProdFrame, text="Marca: ")
 labelMarca_añadirProd.config(bg=back,fg=btfg)
 labelMarca_añadirProd.grid(
-    row=5, 
-    column=0, 
+    row=5,
+    column=0,
     sticky=E
 )
 labelLocal_añadirProd = Label(añadirProdFrame, text="Cantidad Local: ")
@@ -556,25 +639,25 @@ labelBodega_añadirProd.grid(
     #cuadros
 cuadroNombre_añadirProd = Entry(añadirProdFrame)
 cuadroNombre_añadirProd.grid(
-    row=2, 
+    row=2,
     column=1,
     sticky=NSEW
 )
 cuadroCod_añadirProd = Entry(añadirProdFrame)
 cuadroCod_añadirProd.grid(
-    row=3, 
+    row=3,
     column=1,
     sticky=NSEW
 )
 cuadroPrec_añadirProd = Entry(añadirProdFrame)
 cuadroPrec_añadirProd.grid(
-    row=4, 
+    row=4,
     column=1,
     sticky=NSEW
 )
 cuadroMarca_añadirProd = Entry(añadirProdFrame)
 cuadroMarca_añadirProd.grid(
-    row=5, 
+    row=5,
     column=1,
     sticky=NSEW
 )
@@ -586,7 +669,7 @@ cuadroLocal_añadirProd.grid(
 )
 cuadroBodega_añadirProd = Entry(añadirProdFrame)
 cuadroBodega_añadirProd.grid(
-    row=7, 
+    row=7,
     column=1,
     sticky=NSEW
 )
@@ -595,7 +678,7 @@ label_errorProd = Label(añadirProdFrame, text="Error", font="arial")
 label_errorProd.config(bg=back,fg='red')
     #boton actualizar
 actualizarBoton_añadirProd = Button(
-    añadirProdFrame, 
+    añadirProdFrame,
     text="Añadir",
     bg=bt1,fg=btfg,
     command=lambda:Func.añadir_productos(cuadroNombre_añadirProd,cuadroCod_añadirProd,cuadroPrec_añadirProd,cuadroMarca_añadirProd,cuadroLocal_añadirProd,cuadroBodega_añadirProd,label_errorProd)
@@ -626,7 +709,7 @@ buscarVentasLabel_verStock.grid(
 buscarVentasLabel_verStock = Label(verStockFrame, text="Ver Stock",font="arial")
 buscarVentasLabel_verStock.config(bg=back,fg=fgn)
 buscarVentasLabel_verStock.grid(
-    row=0, 
+    row=0,
     column=1,
     columnspan=6,
     sticky=NSEW
@@ -635,7 +718,7 @@ buscarVentasLabel_verStock.grid(
 buscarVentasLabel_verStock = Label(verStockFrame, text="Seleccionar Stock a Mostrar",font=("arial",t_subt))
 buscarVentasLabel_verStock.config(bg=back,fg=btfg)
 buscarVentasLabel_verStock.grid(
-    row=1, 
+    row=1,
     column=1,
     sticky=W
 )
@@ -643,7 +726,7 @@ opcionesStock = StringVar()
 opcionesStock.set(None)
     #radio boton para las opciones mostrar el stock
 rb_semanal_verStock = Radiobutton(
-    verStockFrame, 
+    verStockFrame,
     text="Stock de Producto",
     value='Producto',
     bg=back,fg=btfg,
@@ -654,7 +737,7 @@ rb_semanal_verStock = Radiobutton(
     sticky=W
 )
 rb_mensual_verStock = Radiobutton(
-    verStockFrame, 
+    verStockFrame,
     text="Stock en Tienda",
     value='Tienda',
     bg=back,fg=btfg,
@@ -665,7 +748,7 @@ rb_mensual_verStock = Radiobutton(
     sticky=W
 )
 rb_masVendido_verStock = Radiobutton(
-    verStockFrame, 
+    verStockFrame,
     text="Stock en Bodega",
     value='Bodega',
     bg=back,fg=btfg,
@@ -681,13 +764,13 @@ buscarCuadro_verStock = ttk.Combobox(
     values=Lista_Ver_Stock
 )
 buscarCuadro_verStock.grid(
-    row=5, 
+    row=5,
     column=1,
     sticky=NSEW
 )
     #boton
 buscarBoton_verStock = Button(
-    verStockFrame, 
+    verStockFrame,
     text="   Buscar   ",
     bg=bt1,fg=btfg,
     command=lambda:Func.actualizarListaStock(buscarCuadro_verStock,buscarCuadro_verStock.get(),opcionesStock.get())
@@ -699,7 +782,7 @@ buscarBoton_verStock.grid(
 )
     #boton
 mostrarBoton_verStock = Button(
-    verStockFrame, 
+    verStockFrame,
     text="   Generar   ",
     bg=bt1,fg=btfg,
     command=lambda:Func.MostrarStock(buscarCuadro_verStock.get())
@@ -711,7 +794,7 @@ mostrarBoton_verStock.grid(
 )
 buscarBoton_verStock.config(
     cursor="hand2",
-    pady=1, 
+    pady=1,
     padx=4,
     bd=2,
     overrelief="raised"
@@ -720,18 +803,18 @@ buscarBoton_verStock.config(
 listaBusqFrame_verStock = Frame(verStockFrame)
 listaBusqFrame_verStock.config(
     bg="#ffffff",
-    bd=3, 
-    relief=SUNKEN, 
-    width=250, 
+    bd=3,
+    relief=SUNKEN,
+    width=250,
     height=300
 )
 listaBusqFrame_verStock.grid(
     padx=7,
     pady=1,
-    row=2, 
+    row=2,
     column=4,
-    rowspan=20, 
-    columnspan=2, 
+    rowspan=20,
+    columnspan=2,
     sticky=NSEW
 )
 listaBusqFrame_verStock.propagate(0)
@@ -746,7 +829,7 @@ exportarBoton_verStock.grid(
 exportarBoton_verStock.config(
     cursor="hand2",
     bg=bt1,fg=btfg,
-    pady=1, 
+    pady=1,
     padx=4,
     bd=2,
     overrelief="raised"
@@ -769,7 +852,7 @@ buscarProdLabel_actStock.grid(row=0, column=0,sticky=NSEW)
 buscarProdLabel_actStock = Label(actStockFrame, text="Actualizar Stock",font="arial")
 buscarProdLabel_actStock.config(bg=back,fg=fgn)
 buscarProdLabel_actStock.grid(
-    row=0, 
+    row=0,
     column=1,
     sticky=NSEW
 )
@@ -779,13 +862,13 @@ buscarCuadro_actStock = ttk.Combobox(
     values=Lista_Productos
 )
 buscarCuadro_actStock.grid(
-    row=1, 
+    row=1,
     column=1,
     sticky=NSEW
 )
     #boton buscar
 buscarBoton_actStock = Button(
-    actStockFrame, 
+    actStockFrame,
     text=" Buscar ",
     bg=bt1,fg=btfg,
     command=lambda *args :Func.actualizarLista(buscarCuadro_actStock,buscarCuadro_actStock.get())
@@ -799,28 +882,28 @@ buscarBoton_actStock.grid(
 labelNombre_actStock = Label(actStockFrame, text="Nombre: ")
 labelNombre_actStock.config(bg=back,fg=btfg)
 labelNombre_actStock.grid(
-    row=3, 
+    row=3,
     column=1,
     sticky=W
 )
 laberCod_actStock = Label(actStockFrame, text="Codigo de Barra: ")
 laberCod_actStock.config(bg=back,fg=btfg)
 laberCod_actStock.grid(
-    row=4, 
+    row=4,
     column=1,
     sticky=W
 )
 labelPrec_actStock = Label(actStockFrame, text="Precio: ")
 labelPrec_actStock.config(bg=back,fg=btfg)
 labelPrec_actStock.grid(
-    row=5, 
+    row=5,
     column=1,
     sticky=W
 )
 labelMarca_actStock = Label(actStockFrame, text="Marca: ")
 labelMarca_actStock.config(bg=back,fg=btfg)
 labelMarca_actStock.grid(
-    row=6, 
+    row=6,
     column=1,
     sticky=W
 )
@@ -910,7 +993,7 @@ mostrarBoton_actStock.grid(
 listaDatosLabel_actStock = Label(actStockFrame, text="Destino",font="arial")
 listaDatosLabel_actStock.config(bg=back,fg=fgn)
 listaDatosLabel_actStock.grid(
-    row=1, 
+    row=1,
     column=5,
     sticky=W
 )
@@ -937,7 +1020,7 @@ opcionesIngreso = StringVar()
 opcionesIngreso.set(None)
     #radio boton para las opciones de insertar el stock
 rb_tienda_verStock = Radiobutton(
-    actStockFrame, 
+    actStockFrame,
     text="Tienda",
     value='Tienda',
     bg=back,fg=btfg,
@@ -949,7 +1032,7 @@ rb_tienda_verStock = Radiobutton(
     sticky=W
 )
 rb_bodega_verStock = Radiobutton(
-    actStockFrame, 
+    actStockFrame,
     text="Bodega",
     value='Bodega',
     bg=back,fg=btfg,
@@ -964,14 +1047,14 @@ rb_bodega_verStock = Radiobutton(
 cantLabel_actStock = Label(actStockFrame, text="Cantidad : ",font=("arial",11))
 cantLabel_actStock.config(bg=back,fg=btfg)
 cantLabel_actStock.grid(
-    row=4, 
+    row=4,
     column=5,
     sticky=W
 )
     #cuadros
 cuadroCant_actStock = Entry(actStockFrame)
 cuadroCant_actStock.grid(
-    row=5, 
+    row=5,
     column=5,
     sticky=NSEW
 )
@@ -984,7 +1067,7 @@ labelError_actStock.grid(
 )
     #boton actualizar
 actualizarBoton_actStock = Button(
-    actStockFrame, 
+    actStockFrame,
     text="Actualizar",
     bg=bt1,fg=btfg,
     command=lambda:Func.actualizar_stock(cuadroCant_actStock,opcionesIngreso.get(),labelError_actStock,labelNombreMostrar_actStock,laberCodMostrar_actStock,opcionesTienda.get())
@@ -1000,7 +1083,7 @@ actualizarBoton_actStock.grid(
 #botones opciones principales
     #boton ventas
 botonVentas = Button(
-    opcionesFrame, 
+    opcionesFrame,
     text="Administrar ventas", font=("arial",t_subt),
     command=lambda: Func.cambiarFrame("ventas",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
 )
@@ -1012,7 +1095,7 @@ botonVentas.config(bd=2)
 botonVentas.config(overrelief="raised")
     #boton revisar ventas
 botonRevVentas = Button(
-    opcionesFrame, 
+    opcionesFrame,
     text="Revisar Ventas", font=("arial",t_subt),
     command=lambda: Func.cambiarFrame("revVentas",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
 )
@@ -1024,7 +1107,7 @@ botonRevVentas.config(bd=2)
 botonRevVentas.config(overrelief="raised")
     #boton ver/actualizar datos
 botonActualizarBBDD = Button(
-    opcionesFrame, 
+    opcionesFrame,
     text="Actualizar datos de productos", font=("arial",t_subt),
     command=lambda: Func.cambiarFrame("actDatos",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
 )
@@ -1036,7 +1119,7 @@ botonActualizarBBDD.config(bd=2)
 botonActualizarBBDD.config(overrelief="raised")
     #boton añadir productos
 botonVisualBBDD = Button(
-    opcionesFrame, 
+    opcionesFrame,
     text="Añadir nuevos productos", font=("arial",t_subt),
     command=lambda: Func.cambiarFrame("verDatos",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
 )
@@ -1048,7 +1131,7 @@ botonVisualBBDD.config(bd=2)
 botonVisualBBDD.config(overrelief="raised")
     #boton ver stock
 botonVerStock = Button(
-    opcionesFrame, 
+    opcionesFrame,
     text="Ver Stock", font=("arial",t_subt),
     command=lambda: Func.cambiarFrame("verStock",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
 )
@@ -1060,7 +1143,7 @@ botonVerStock.config(bd=2)
 botonVerStock.config(overrelief="raised")
     #boton actualizar stock
 botonVerStock = Button(
-    opcionesFrame, 
+    opcionesFrame,
     text="Actualizar Stock", font=("arial",t_subt),
     command=lambda: Func.cambiarFrame("actStock",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
 )
