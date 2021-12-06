@@ -287,7 +287,7 @@ rb_mensual = Radiobutton(
 )
 rb_masVendidos = Radiobutton(
     revVentasFrame,
-    text="Mas vendidos",
+    text="Más vendidos",
     value='Mas',
     bg=back,fg=btfg,
     variable=opcionOrden
@@ -433,7 +433,7 @@ labelNombreMostrar_actDatos = Label(actDatosFrame, text="Nombre:")
 labelNombreMostrar_actDatos.config(bg=back,fg=btfg)
 labelNombreMostrar_actDatos.grid(row=3,column=1,sticky=W)
     #labels
-labelCodigoMostrar_actDatos = Label(actDatosFrame, text="Codigo de Barra:")
+labelCodigoMostrar_actDatos = Label(actDatosFrame, text="Código de Barra:")
 labelCodigoMostrar_actDatos.config(bg=back,fg=btfg)
 labelCodigoMostrar_actDatos.grid(row=4, column=1, sticky=W)
     #labels
@@ -489,7 +489,7 @@ labelNombre_actDatos.grid(
     padx=30,
     sticky=E
 )
-laberCod_actDatos = Label(actDatosFrame, text="Codigo de Barra")
+laberCod_actDatos = Label(actDatosFrame, text="Código de Barra")
 laberCod_actDatos.config(bg=back,fg=btfg)
 laberCod_actDatos.grid(
     row=3,
@@ -601,7 +601,7 @@ labelNombre_añadirProd.grid(
     column=0,
     sticky=E
 )
-laberCod_añadirProd = Label(añadirProdFrame, text="Codigo de Barra: ")
+laberCod_añadirProd = Label(añadirProdFrame, text="Código de Barra: ")
 laberCod_añadirProd.config(bg=back, fg=btfg)
 laberCod_añadirProd.grid(
     row=3,
@@ -886,7 +886,7 @@ labelNombre_actStock.grid(
     column=1,
     sticky=W
 )
-laberCod_actStock = Label(actStockFrame, text="Codigo de Barra: ")
+laberCod_actStock = Label(actStockFrame, text="Código de Barra: ")
 laberCod_actStock.config(bg=back,fg=btfg)
 laberCod_actStock.grid(
     row=4,
