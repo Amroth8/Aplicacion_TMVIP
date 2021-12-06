@@ -16,7 +16,11 @@ fgn = "#33354a"
 t_subt = 11
 
 Lista_Productos = Func.actualizarListaINI('')
-Lista_Ver_Stock = []
+
+def act_lista_prod():
+    global Lista_Productos
+    Lista_Productos = Func.actualizarListaINI('')
+
 Fechas = []
 
 #raiz principal
@@ -694,7 +698,7 @@ actualizarBoton_añadirProd.grid(
 verStockFrame = Frame(opcionesFrame)
 verStockFrame.config(
     bg=back,
-    width=600,
+    width=750,
     height=460
 )
 verStockFrame.grid_propagate(False)
@@ -722,6 +726,18 @@ buscarVentasLabel_verStock.grid(
     column=1,
     sticky=W
 )
+    #cuadro
+buscarCuadro_verStock = ttk.Combobox(
+    verStockFrame,
+    values=Lista_Productos
+)
+    #boton
+buscarBoton_verStock = Button(
+    verStockFrame,
+    text="   Buscar   ",
+    bg=bt1,fg=btfg,
+    command=lambda:Func.actualizarListaStock(buscarCuadro_verStock,buscarCuadro_verStock.get(),opcionesStock.get())
+)
 opcionesStock = StringVar()
 opcionesStock.set(None)
     #radio boton para las opciones mostrar el stock
@@ -730,7 +746,8 @@ rb_semanal_verStock = Radiobutton(
     text="Stock de Producto",
     value='Producto',
     bg=back,fg=btfg,
-    variable=opcionesStock
+    variable=opcionesStock,
+    command=lambda:Func.mostrar_combobox_verStock(buscarCuadro_verStock,buscarBoton_verStock)
 ).grid(
     row=2,
     column=1,
@@ -741,7 +758,8 @@ rb_mensual_verStock = Radiobutton(
     text="Stock en Tienda",
     value='Tienda',
     bg=back,fg=btfg,
-    variable=opcionesStock
+    variable=opcionesStock,
+    command=lambda:Func.esconder_combobox_verStock(buscarCuadro_verStock,buscarBoton_verStock)
 ).grid(
     row=3,
     column=1,
@@ -752,40 +770,38 @@ rb_masVendido_verStock = Radiobutton(
     text="Stock en Bodega",
     value='Bodega',
     bg=back,fg=btfg,
-    variable=opcionesStock
+    variable=opcionesStock,
+    command=lambda:Func.esconder_combobox_verStock(buscarCuadro_verStock,buscarBoton_verStock)
 ).grid(
     row=4,
     column=1,
     sticky=W
 )
-    #cuadro
-buscarCuadro_verStock = ttk.Combobox(
-    verStockFrame,
-    values=Lista_Ver_Stock
+    #lista de la busqueda
+listaBusqFrame_verStock = Frame(verStockFrame)
+listaBusqFrame_verStock.config(
+    bg="#ffffff",
+    bd=3,
+    relief=SUNKEN,
+    width=400,
+    height=350
 )
-buscarCuadro_verStock.grid(
-    row=5,
-    column=1,
+listaBusqFrame_verStock.grid(
+    padx=7,
+    pady=1,
+    row=2,
+    column=4,
+    rowspan=20,
+    columnspan=2,
     sticky=NSEW
 )
-    #boton
-buscarBoton_verStock = Button(
-    verStockFrame,
-    text="   Buscar   ",
-    bg=bt1,fg=btfg,
-    command=lambda:Func.actualizarListaStock(buscarCuadro_verStock,buscarCuadro_verStock.get(),opcionesStock.get())
-)
-buscarBoton_verStock.grid(
-    row=5,
-    column=2,
-    sticky=NSEW
-)
+listaBusqFrame_verStock.grid_propagate(0)
     #boton
 mostrarBoton_verStock = Button(
     verStockFrame,
     text="   Generar   ",
     bg=bt1,fg=btfg,
-    command=lambda:Func.MostrarStock(buscarCuadro_verStock.get())
+    command=lambda:Func.GenerarInformeStock(buscarCuadro_verStock.get(),opcionesStock.get(),listaBusqFrame_verStock)
 )
 mostrarBoton_verStock.grid(
     row=6,
@@ -799,25 +815,6 @@ buscarBoton_verStock.config(
     bd=2,
     overrelief="raised"
 )
-    #lista de la busqueda
-listaBusqFrame_verStock = Frame(verStockFrame)
-listaBusqFrame_verStock.config(
-    bg="#ffffff",
-    bd=3,
-    relief=SUNKEN,
-    width=250,
-    height=300
-)
-listaBusqFrame_verStock.grid(
-    padx=7,
-    pady=1,
-    row=2,
-    column=4,
-    rowspan=20,
-    columnspan=2,
-    sticky=NSEW
-)
-listaBusqFrame_verStock.propagate(0)
         #scroll para la lista
     #boton para expotar datos de la venta
 exportarBoton_verStock = Button(verStockFrame, text="Exportar") #, command = funcion para insertar frame
@@ -1085,7 +1082,10 @@ actualizarBoton_actStock.grid(
 botonVentas = Button(
     opcionesFrame,
     text="Administrar ventas", font=("arial",t_subt),
-    command=lambda: Func.cambiarFrame("ventas",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
+    command=lambda: [
+        Func.cambiarFrame("ventas",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame),
+        act_lista_prod()
+    ]
 )
 botonVentas.grid(row=0,column=0,sticky=NSEW)
 botonVentas.config(bg=bt1, fg=btfg)
@@ -1097,7 +1097,10 @@ botonVentas.config(overrelief="raised")
 botonRevVentas = Button(
     opcionesFrame,
     text="Revisar Ventas", font=("arial",t_subt),
-    command=lambda: Func.cambiarFrame("revVentas",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
+    command=lambda: [
+        Func.cambiarFrame("revVentas",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame),
+        act_lista_prod()
+    ]
 )
 botonRevVentas.grid(row=1,column=0,sticky=NSEW)
 botonRevVentas.config(bg=bt1,fg=btfg)
@@ -1109,7 +1112,10 @@ botonRevVentas.config(overrelief="raised")
 botonActualizarBBDD = Button(
     opcionesFrame,
     text="Actualizar datos de productos", font=("arial",t_subt),
-    command=lambda: Func.cambiarFrame("actDatos",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
+    command=lambda: [
+        Func.cambiarFrame("actDatos",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame),
+        act_lista_prod()
+    ]
 )
 botonActualizarBBDD.grid(row=2,column=0,sticky=NSEW)
 botonActualizarBBDD.config(bg=bt1,fg=btfg)
@@ -1121,7 +1127,10 @@ botonActualizarBBDD.config(overrelief="raised")
 botonVisualBBDD = Button(
     opcionesFrame,
     text="Añadir nuevos productos", font=("arial",t_subt),
-    command=lambda: Func.cambiarFrame("verDatos",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
+    command=lambda: [
+        Func.cambiarFrame("verDatos",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame),
+        act_lista_prod()
+    ]
 )
 botonVisualBBDD.grid(row=3,column=0,sticky=NSEW)
 botonVisualBBDD.config(bg=bt1,fg=btfg)
@@ -1133,7 +1142,10 @@ botonVisualBBDD.config(overrelief="raised")
 botonVerStock = Button(
     opcionesFrame,
     text="Ver Stock", font=("arial",t_subt),
-    command=lambda: Func.cambiarFrame("verStock",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
+    command=lambda: [
+        Func.cambiarFrame("verStock",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame),
+        act_lista_prod()
+    ]
 )
 botonVerStock.grid(row=4,column=0,sticky=NSEW)
 botonVerStock.config(bg=bt1,fg=btfg)
@@ -1145,7 +1157,10 @@ botonVerStock.config(overrelief="raised")
 botonVerStock = Button(
     opcionesFrame,
     text="Actualizar Stock", font=("arial",t_subt),
-    command=lambda: Func.cambiarFrame("actStock",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame)
+    command=lambda: [
+        Func.cambiarFrame("actStock",revVentasFrame,ventasFrame,actDatosFrame,añadirProdFrame,verStockFrame,actStockFrame),
+        act_lista_prod()
+    ]
 )
 botonVerStock.grid(row=5,column=0,sticky=NSEW)
 botonVerStock.config(bg=bt1,fg=btfg)

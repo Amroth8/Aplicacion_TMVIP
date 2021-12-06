@@ -19,8 +19,6 @@ def buscarprod (datos)  :
             sentencia = "SELECT * FROM producto WHERE nom like '%{}%'"
             cursor.execute(sentencia.format(datos))
             resultados = cursor.fetchall()
-            for fila in resultados  :
-                print(fila[1],fila[2],fila[3],fila[4],fila[5])
         else    :
             print("Dato no encontrado") 
     except Error as ex :
@@ -381,7 +379,64 @@ def actualizarStockLocalBodega (nom,cod,cant)  :
             conexion.close() #cierro conexion con la base
             print("Conexion finalizada.")
             return ret
+
+def stocks_loc_bod(sentencia):
+    resultados=[]
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+        )
+        if conexion.is_connected() :
+            print("Conexion exitosa.")
+            cursor=conexion.cursor()
+            cursor.execute(sentencia)
+            resultados = cursor.fetchall()
+        else    :
+            print("Dato no encontrado") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+            return resultados
+        return resultados 
     
+def stock_producto(nom,cod):
+    resultados=[]
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+        )
+        if conexion.is_connected() :
+            print("Conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "SELECT * FROM producto WHERE nom='{}' and cod_bar={}"
+            cursor.execute(sentencia.format(nom,cod))
+            resultados = cursor.fetchall()
+            id_prod=resultados[0][0]
+            sentencia = "select p.nom,p.cod_bar,p.prec,p.marca,p.cant,sl.cant as cant_loc,l.nom as nom_loc,sb.cant as cant_bod,b.direcb from producto as p, stock_local as sl, locall as l, stock_bodega as sb, bodega as b where sl.id_loc=l.id_loc and sl.id_prod=p.id_prod and sb.id_bod=b.id_bod and sb.id_prod=p.id_prod and p.id_prod={};"
+            cursor.execute(sentencia.format(id_prod))
+            resultados = cursor.fetchall()
+        else    :
+            print("Dato no encontrado") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+            return resultados
+        return resultados
+
     #PPRUEBAS
 nombre = 'azucar '#'coca cola' #"pampita"
 cantidad = 10 #110
