@@ -23,6 +23,8 @@ def act_lista_prod():
 
 Fechas = []
 
+dictVentas={'nombre': [],'marca':[],'precio':[], 'codigo':[]}
+
 #raiz principal
 root = Tk()
 root.title("Todo Market VIP")
@@ -144,11 +146,12 @@ scrollProd_ventas.pack(side=RIGHT, fill=Y)
 
 
     #boton
+
 buscarBoton_ventas = Button(
     ventasFrame,
     text="Buscar",
-    command=lambda:Func.buscarAdmVentas(buscarCuadro_ventas.get(), listaBusq_ventas)
-) #, command = funcion para insertar frame
+    command=lambda:[Func.buscarAdmVentas(buscarCuadro_ventas.get(), listaBusq_ventas, dictVentas)]
+)#, command = funcion para insertar frame
 buscarBoton_ventas.config(bg=bt1, fg=btfg)
 buscarBoton_ventas.grid(
     row=2,
@@ -166,7 +169,7 @@ buscarBoton_ventas.config(
 agregarBoton_ventas = Button(
     ventasFrame,
     text="Agregar",
-    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas)
+    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas, dictVentas)
 ) #, command = funcion para insertar frame
 agregarBoton_ventas.config(bg=bt1, fg=btfg)
 agregarBoton_ventas.grid(
@@ -201,25 +204,32 @@ borrarBoton_ventas.config(
     overrelief="raised"
 )
 
-exportarBoton_ventas = Button(
+venderBoton_ventas = Button(
     ventasFrame,
-    text="Exportar",
-    command=lambda:Func.exportarAdmVentas(listaProd_ventas)
+    text="Vender",
+    command=lambda:Func.venderAdmVentas(listaProd_ventas)
 ) #, command = funcion para insertar frame
-exportarBoton_ventas.config(bg=bt1, fg=btfg)
-exportarBoton_ventas.grid(
+venderBoton_ventas.config(bg=bt1, fg=btfg)
+venderBoton_ventas.grid(
     row=5,
     column=4,
     sticky=NSEW
 )
-exportarBoton_ventas.config(
+venderBoton_ventas.config(
     cursor="hand2",
     pady=1,
     padx=4,
     bd=2,
     overrelief="raised"
 )
-
+totalVenta=0
+totalLabel_ventas = Label(ventasFrame, text="Total: "+str(totalVenta), font=("arial",14))
+totalLabel_ventas.config(bg=back,fg=btfg)
+totalLabel_ventas.grid(
+    row=9,
+    column=3,
+    sticky=NSEW
+)
 
 #frame de informe de ventas
 revVentasFrame = Frame(opcionesFrame)

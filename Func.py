@@ -53,16 +53,24 @@ def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
         actStock.grid(row=0, rowspan=100, column=1, columnspan=100, sticky=NSEW)
         actStock.grid_propagate(False)
 
-def buscarAdmVentas(dato,lbox):
+
+def buscarAdmVentas(dato,lbox,resultadosPD):
     resultados=CON_PROC.buscarprod(dato)
+    resultadosPD={'nombre': [],'marca':[],'precio':[], 'codigo':[]} #Para luego trabajar con Panda
     lbox.delete(0, END)
-    print(resultados)
     for item in range(len(resultados)):
         lbox.insert(END, str(resultados[item][0])+') '+resultados[item][1]+' '+resultados[item][5]+' - '+str(resultados[item][4]))
         lbox.itemconfig(item)
+        resultadosPD["nombre"].append(resultados[item][1])
+        resultadosPD["marca"].append(resultados[item][5])
+        resultadosPD["precio"].append(resultados[item][4])
+        resultadosPD["codigo"].append(resultados[item][3])
 
-def agregarAdmVentas(lbox, lbox2):
+
+
+def agregarAdmVentas(lbox, lbox2, resultadosPD):
     selecciones=[]
+    print(resultadosPD)
     seleccion = lbox.curselection()
     for i in seleccion:
         ag = lbox.get(i)
@@ -70,7 +78,7 @@ def agregarAdmVentas(lbox, lbox2):
     for item in range(len(selecciones)):
         lbox2.insert(END, selecciones[item])
         lbox2.itemconfig(item)
-        
+
 def borrarAdmVentas(lbox):
     seleccion = lbox.curselection()
     pos = 0
@@ -79,7 +87,7 @@ def borrarAdmVentas(lbox):
         lbox.delete(indice,indice)
         pos = pos + 1
 
-def exportarAdmVentas(lbox):
+def venderAdmVentas(lbox):
     print('excel')
 
 def verificar_datos_act(codigo,precio,label):
