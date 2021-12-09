@@ -29,6 +29,33 @@ def buscarprod (datos)  :
             print("Conexion finalizada.")
             return resultados
         return resultados
+
+def buscarprodVenta (datos)  :
+    resultados=[]
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+        )
+        if conexion.is_connected() :
+            print("Conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "SELECT p.id_prod,p.nom,p.cant,p.cod_bar,p.prec,p.marca FROM producto as p, stock_local as sl WHERE p.id_prod=sl.id_prod and p.nom like '%{}%' and sl.cant>0"
+            cursor.execute(sentencia.format(datos))
+            resultados = cursor.fetchall()
+        else    :
+            print("Dato no encontrado") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+            return resultados
+        return resultados
                         
 def buscarprodUnico (nom,codigo)  :
     resultados=[]

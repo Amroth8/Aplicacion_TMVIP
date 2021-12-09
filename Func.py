@@ -55,7 +55,7 @@ def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
 
 
 def buscarAdmVentas(dato,lbox,resultadosPD):
-    resultados=CON_PROC.buscarprod(dato)
+    resultados=CON_PROC.buscarprodVenta(dato)
     resultadosPD={'nombre': [],'marca':[],'precio':[], 'codigo':[]} #Para luego trabajar con Panda
     lbox.delete(0, END)
     for item in range(len(resultados)):
@@ -66,24 +66,33 @@ def buscarAdmVentas(dato,lbox,resultadosPD):
         resultadosPD["precio"].append(resultados[item][4])
         resultadosPD["codigo"].append(resultados[item][3])
 
+def getPrecio(dato):
+    precio=''
+    for letra in reversed(dato):
+        if letra == ' ':
+            break
+        precio=letra+precio
+    return int(precio)
 
-
-def agregarAdmVentas(lbox, lbox2, resultadosPD):
+def agregarAdmVentas(lbox, lbox2, resultadosPD,totalVenta):
     selecciones=[]
-    print(resultadosPD)
     seleccion = lbox.curselection()
     for i in seleccion:
         ag = lbox.get(i)
         selecciones.append(ag)
     for item in range(len(selecciones)):
+        venta=getPrecio(selecciones[item])+getPrecio(totalVenta['text'])
+        totalVenta['text']="Total: "+str(venta)
         lbox2.insert(END, selecciones[item])
         lbox2.itemconfig(item)
 
-def borrarAdmVentas(lbox):
+def borrarAdmVentas(lbox,totalVenta):
     seleccion = lbox.curselection()
     pos = 0
     for i in seleccion:
         indice = int(i) - pos
+        venta=getPrecio(totalVenta['text'])-getPrecio(lbox.get(indice))
+        totalVenta['text']="Total: "+str(venta)
         lbox.delete(indice,indice)
         pos = pos + 1
 

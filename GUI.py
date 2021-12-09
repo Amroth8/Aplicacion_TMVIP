@@ -23,7 +23,7 @@ def act_lista_prod():
 
 Fechas = []
 
-dictVentas={'nombre': [],'marca':[],'precio':[], 'codigo':[]}
+dictVentas={'nombre': [],'marca':[],'precio':[], 'codigo':[], 'Cantidad':[]}
 
 #raiz principal
 root = Tk()
@@ -123,7 +123,7 @@ listaLabel_ventas.grid(
     column=3,
     sticky=NSEW
 )
-listaProd_ventas = Listbox(ventasFrame)
+listaProd_ventas = Listbox(ventasFrame, selectmode = "multiple")
 listaProd_ventas.pack(side=LEFT,fill=BOTH)
 listaProd_ventas.config(
     bg="#ffffff",
@@ -165,12 +165,19 @@ buscarBoton_ventas.config(
     bd=2,
     overrelief="raised"
 )
-
+totalVenta=0
+totalLabel_ventas = Label(ventasFrame, text="Total: "+str(totalVenta), font=("arial",14))
+totalLabel_ventas.config(bg=back,fg=btfg)
+totalLabel_ventas.grid(
+    row=9,
+    column=3,
+    sticky=NSEW
+)
 agregarBoton_ventas = Button(
     ventasFrame,
     text="Agregar",
-    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas, dictVentas)
-) #, command = funcion para insertar frame
+    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas, dictVentas,totalLabel_ventas)
+) 
 agregarBoton_ventas.config(bg=bt1, fg=btfg)
 agregarBoton_ventas.grid(
     row=4,
@@ -188,7 +195,7 @@ agregarBoton_ventas.config(
 borrarBoton_ventas = Button(
     ventasFrame,
     text="Borrar",
-    command=lambda:Func.borrarAdmVentas(listaProd_ventas)
+    command=lambda:Func.borrarAdmVentas(listaProd_ventas,totalLabel_ventas)
 ) #, command = funcion para insertar frame
 borrarBoton_ventas.config(bg=bt1, fg=btfg)
 borrarBoton_ventas.grid(
@@ -222,14 +229,7 @@ venderBoton_ventas.config(
     bd=2,
     overrelief="raised"
 )
-totalVenta=0
-totalLabel_ventas = Label(ventasFrame, text="Total: "+str(totalVenta), font=("arial",14))
-totalLabel_ventas.config(bg=back,fg=btfg)
-totalLabel_ventas.grid(
-    row=9,
-    column=3,
-    sticky=NSEW
-)
+
 
 #frame de informe de ventas
 revVentasFrame = Frame(opcionesFrame)
