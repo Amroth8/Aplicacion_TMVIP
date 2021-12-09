@@ -23,8 +23,6 @@ def act_lista_prod():
 
 Fechas = []
 
-dictVentas={'nombre': [],'marca':[],'precio':[], 'codigo':[], 'Cantidad':[]}
-
 #raiz principal
 root = Tk()
 root.title("Todo Market VIP")
@@ -97,7 +95,7 @@ listaBusq_ventas.config(
     bg="#ffffff",
     bd=3,
     relief=SUNKEN,
-    width=25,
+    width=35,
     height=18
 )
 listaBusq_ventas.grid(
@@ -129,10 +127,11 @@ listaProd_ventas.config(
     bg="#ffffff",
     bd=3,
     relief=SUNKEN,
-    width=25,
+    width=35,
     height=18
 )
 listaProd_ventas.grid(
+    padx=40,
     row=3,
     column=3,
     columnspan=2,
@@ -150,7 +149,7 @@ scrollProd_ventas.pack(side=RIGHT, fill=Y)
 buscarBoton_ventas = Button(
     ventasFrame,
     text="Buscar",
-    command=lambda:[Func.buscarAdmVentas(buscarCuadro_ventas.get(), listaBusq_ventas, dictVentas)]
+    command=lambda:[Func.buscarAdmVentas(buscarCuadro_ventas.get(), listaBusq_ventas)]
 )#, command = funcion para insertar frame
 buscarBoton_ventas.config(bg=bt1, fg=btfg)
 buscarBoton_ventas.grid(
@@ -176,7 +175,7 @@ totalLabel_ventas.grid(
 agregarBoton_ventas = Button(
     ventasFrame,
     text="Agregar",
-    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas, dictVentas,totalLabel_ventas)
+    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas, totalLabel_ventas)
 ) 
 agregarBoton_ventas.config(bg=bt1, fg=btfg)
 agregarBoton_ventas.grid(
@@ -195,7 +194,7 @@ agregarBoton_ventas.config(
 borrarBoton_ventas = Button(
     ventasFrame,
     text="Borrar",
-    command=lambda:Func.borrarAdmVentas(listaProd_ventas,totalLabel_ventas)
+    command=lambda:Func.borrarAdmVentas(listaBusq_ventas,listaProd_ventas,totalLabel_ventas)
 ) #, command = funcion para insertar frame
 borrarBoton_ventas.config(bg=bt1, fg=btfg)
 borrarBoton_ventas.grid(

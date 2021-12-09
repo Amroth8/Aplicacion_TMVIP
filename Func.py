@@ -54,46 +54,103 @@ def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
         actStock.grid_propagate(False)
 
 
-def buscarAdmVentas(dato,lbox,resultadosPD):
+def buscarAdmVentas(dato,lbox,):
     resultados=CON_PROC.buscarprodVenta(dato)
-    resultadosPD={'nombre': [],'marca':[],'precio':[], 'codigo':[]} #Para luego trabajar con Panda
     lbox.delete(0, END)
     for item in range(len(resultados)):
-        lbox.insert(END, str(resultados[item][0])+') '+resultados[item][1]+' '+resultados[item][5]+' - '+str(resultados[item][4]))
+        lbox.insert(END, resultados[item][0]+' - "'+resultados[item][4]+'" - ('+str(resultados[item][1])+') - $'+str(resultados[item][3]))
         lbox.itemconfig(item)
-        resultadosPD["nombre"].append(resultados[item][1])
-        resultadosPD["marca"].append(resultados[item][5])
-        resultadosPD["precio"].append(resultados[item][4])
-        resultadosPD["codigo"].append(resultados[item][3])
 
 def getPrecio(dato):
     precio=''
     for letra in reversed(dato):
-        if letra == ' ':
+        if letra == '$' or letra == ' ':
             break
         precio=letra+precio
     return int(precio)
 
-def agregarAdmVentas(lbox, lbox2, resultadosPD,totalVenta):
+def getCant(dato):
+    cantidad1=''
+    cantidad=''
+    for letra in dato:
+        if letra == ')':
+            break
+        cantidad1=cantidad1+letra
+    for letra in reversed(cantidad1):
+        if letra == '(':
+            break
+        cantidad=letra+cantidad
+    return int(cantidad)
+
+def updateDatos(datos,cant):
+    mitad1=''
+    mitad2=''
+    for letra in datos:
+        mitad1=mitad1+letra
+        if letra == '(':
+            break
+    for letra in reversed(datos):
+        mitad2=letra+mitad2
+        if letra == ')':
+            break
+    return mitad1+str(cant)+mitad2
+
+def datosFrame2(datos):
+    mitad1=''
+    mitad2=''
+    for letra in datos:
+        if letra == '(':
+            break
+        mitad1=mitad1+letra
+    for letra in reversed(datos):
+        if letra == ')':
+            break
+        mitad2=letra+mitad2
+    return mitad1[:len(mitad1)-2]+mitad2
+
+def updateLbox(lbox,cant,datoAct):
+    for i in range(lbox.size()):
+        if lbox.get(i)==datoAct:
+            lbox.delete(i)
+            lbox.insert(i, updateDatos(datoAct,cant))
+
+def mismoProducto(dato1,dato2):
+    if datosFrame2(dato1)==dato2:
+        return True
+    else:
+        return False
+
+def updateLboxBorrar(lbox,datoAct):
+    for i in range(lbox.size()):
+        if mismoProducto(lbox.get(i),datoAct):
+            datos=lbox.get(i)
+            cant=getCant(lbox.get(i))
+            lbox.delete(i)
+            lbox.insert(i, updateDatos(datos,cant+1))
+
+def agregarAdmVentas(lbox, lbox2,totalVenta):
     selecciones=[]
-    seleccion = lbox.curselection()
-    for i in seleccion:
+    for i in lbox.curselection():
         ag = lbox.get(i)
-        selecciones.append(ag)
+        cant=getCant(ag)
+        if cant>0:
+            updateLbox(lbox,cant-1,ag)
+            selecciones.append(ag)
     for item in range(len(selecciones)):
         venta=getPrecio(selecciones[item])+getPrecio(totalVenta['text'])
         totalVenta['text']="Total: "+str(venta)
-        lbox2.insert(END, selecciones[item])
+        lbox2.insert(END, datosFrame2(selecciones[item]))
         lbox2.itemconfig(item)
 
-def borrarAdmVentas(lbox,totalVenta):
-    seleccion = lbox.curselection()
+def borrarAdmVentas(lbox,lbox2,totalVenta):
+    seleccion = lbox2.curselection()
     pos = 0
     for i in seleccion:
         indice = int(i) - pos
-        venta=getPrecio(totalVenta['text'])-getPrecio(lbox.get(indice))
+        venta=getPrecio(totalVenta['text'])-getPrecio(lbox2.get(indice))
         totalVenta['text']="Total: "+str(venta)
-        lbox.delete(indice,indice)
+        updateLboxBorrar(lbox,lbox2.get(i))
+        lbox2.delete(indice,indice)
         pos = pos + 1
 
 def venderAdmVentas(lbox):
