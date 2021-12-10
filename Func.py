@@ -54,12 +54,13 @@ def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
         actStock.grid_propagate(False)
 
 
-def buscarAdmVentas(dato,lbox,):
+def buscarAdmVentas(dato,lbox,lista_id):
     resultados=CON_PROC.buscarprodVenta(dato)
     lbox.delete(0, END)
     for item in range(len(resultados)):
         lbox.insert(END, resultados[item][0]+' - "'+resultados[item][4]+'" - ('+str(resultados[item][1])+') - $'+str(resultados[item][3]))
         lbox.itemconfig(item)
+        lista_id.append(resultados[item][5])
 
 def getPrecio(dato):
     precio=''
@@ -128,12 +129,13 @@ def updateLboxBorrar(lbox,datoAct):
             lbox.delete(i)
             lbox.insert(i, updateDatos(datos,cant+1))
 
-def agregarAdmVentas(lbox, lbox2,totalVenta):
+def agregarAdmVentas(lbox, lbox2,totalVenta,Lista_id,Lista_id_venta):
     selecciones=[]
     for i in lbox.curselection():
         ag = lbox.get(i)
         cant=getCant(ag)
         if cant>0:
+            Lista_id_venta.append(Lista_id[i])
             updateLbox(lbox,cant-1,ag)
             selecciones.append(ag)
     for item in range(len(selecciones)):
@@ -142,19 +144,32 @@ def agregarAdmVentas(lbox, lbox2,totalVenta):
         lbox2.insert(END, datosFrame2(selecciones[item]))
         lbox2.itemconfig(item)
 
-def borrarAdmVentas(lbox,lbox2,totalVenta):
+def borrarAdmVentas(lbox,lbox2,totalVenta,lista_id_ventas):
     seleccion = lbox2.curselection()
     pos = 0
     for i in seleccion:
         indice = int(i) - pos
         venta=getPrecio(totalVenta['text'])-getPrecio(lbox2.get(indice))
         totalVenta['text']="Total: "+str(venta)
-        updateLboxBorrar(lbox,lbox2.get(i))
+        updateLboxBorrar(lbox,lbox2.get(indice))
         lbox2.delete(indice,indice)
+        del lista_id_ventas[indice]
         pos = pos + 1
 
-def venderAdmVentas(lbox):
-    print('excel')
+def venderAdmVentas(lbox,lista_id_ventas,totalLabel_ventas):
+    lista_cant=[]
+    lista_cant.append([lista_id_ventas[0],1])
+    for i in range(1,len(lista_id_ventas)):
+        agregar=True
+        for j in range(len(lista_cant)):
+            if lista_id_ventas[i]==lista_cant[j][0]:
+                agregar=False
+                lista_cant[j][1]+=1
+        if agregar:
+            lista_cant.append([lista_id_ventas[i],1])
+    CON_PROC.ingresoVentas(lista_cant,getPrecio(totalLabel_ventas['text']))
+    lbox.delete(0,END)
+    totalLabel_ventas['text']="Total: 0"
 
 def verificar_datos_act(codigo,precio,label):
     try:

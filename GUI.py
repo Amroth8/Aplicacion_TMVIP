@@ -22,6 +22,8 @@ def act_lista_prod():
     Lista_Productos = Func.actualizarListaINI('')
 
 Fechas = []
+Lista_id=[]
+Lista_id_Venta=[]
 
 #raiz principal
 root = Tk()
@@ -149,7 +151,7 @@ scrollProd_ventas.pack(side=RIGHT, fill=Y)
 buscarBoton_ventas = Button(
     ventasFrame,
     text="Buscar",
-    command=lambda:[Func.buscarAdmVentas(buscarCuadro_ventas.get(), listaBusq_ventas)]
+    command=lambda:[Func.buscarAdmVentas(buscarCuadro_ventas.get(), listaBusq_ventas,Lista_id)]
 )#, command = funcion para insertar frame
 buscarBoton_ventas.config(bg=bt1, fg=btfg)
 buscarBoton_ventas.grid(
@@ -175,7 +177,7 @@ totalLabel_ventas.grid(
 agregarBoton_ventas = Button(
     ventasFrame,
     text="Agregar",
-    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas, totalLabel_ventas)
+    command=lambda:Func.agregarAdmVentas(listaBusq_ventas, listaProd_ventas, totalLabel_ventas,Lista_id,Lista_id_Venta)
 ) 
 agregarBoton_ventas.config(bg=bt1, fg=btfg)
 agregarBoton_ventas.grid(
@@ -194,7 +196,7 @@ agregarBoton_ventas.config(
 borrarBoton_ventas = Button(
     ventasFrame,
     text="Borrar",
-    command=lambda:Func.borrarAdmVentas(listaBusq_ventas,listaProd_ventas,totalLabel_ventas)
+    command=lambda:Func.borrarAdmVentas(listaBusq_ventas,listaProd_ventas,totalLabel_ventas,Lista_id_Venta)
 ) #, command = funcion para insertar frame
 borrarBoton_ventas.config(bg=bt1, fg=btfg)
 borrarBoton_ventas.grid(
@@ -213,7 +215,7 @@ borrarBoton_ventas.config(
 venderBoton_ventas = Button(
     ventasFrame,
     text="Vender",
-    command=lambda:Func.venderAdmVentas(listaProd_ventas)
+    command=lambda:Func.venderAdmVentas(listaProd_ventas,Lista_id_Venta,totalLabel_ventas)
 ) #, command = funcion para insertar frame
 venderBoton_ventas.config(bg=bt1, fg=btfg)
 venderBoton_ventas.grid(
