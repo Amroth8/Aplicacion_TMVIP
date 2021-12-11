@@ -21,7 +21,8 @@ def act_lista_prod():
     global Lista_Productos
     Lista_Productos = Func.actualizarListaINI('')
 
-Fechas = []
+lista_semanas = Func.rellenarSemanas()
+lista_meses = Func.rellenarMeses()
 Lista_id=[]
 Lista_id_Venta=[]
 
@@ -93,12 +94,15 @@ buscarCuadro_ventas.grid(
     #lista de la busqueda
 listaBusq_ventas = Listbox(ventasFrame, selectmode = "multiple")
 listaBusq_ventas.pack(side=LEFT,fill=BOTH)
+scrollBusqueda_ventas = Scrollbar(listaBusq_ventas)
+scrollBusqueda_ventas.pack(side=RIGHT, fill=Y)
 listaBusq_ventas.config(
     bg="#ffffff",
     bd=3,
     relief=SUNKEN,
     width=35,
-    height=18
+    height=18,
+    yscrollcommand=scrollBusqueda_ventas.set
 )
 listaBusq_ventas.grid(
     row=3,
@@ -107,13 +111,6 @@ listaBusq_ventas.grid(
     sticky=NSEW
 )
 listaBusq_ventas.propagate(0)
-    #scroll para la lista
-scrollBusqueda_ventas = Scrollbar(listaBusq_ventas)
-scrollBusqueda_ventas.pack(side=RIGHT, fill=Y)
-        ##bucle para mostrar toda la busqueda
-        #marcar los productos
-
-
 
 #lista de productos de la venta
 listaLabel_ventas = Label(ventasFrame, text="    Lista de Productos", font=("arial",t_subt+1))
@@ -125,12 +122,15 @@ listaLabel_ventas.grid(
 )
 listaProd_ventas = Listbox(ventasFrame, selectmode = "multiple")
 listaProd_ventas.pack(side=LEFT,fill=BOTH)
+scrollProd_ventas = Scrollbar(listaProd_ventas)
+scrollProd_ventas.pack(side=RIGHT, fill=Y)
 listaProd_ventas.config(
     bg="#ffffff",
     bd=3,
     relief=SUNKEN,
     width=35,
-    height=18
+    height=18,
+    yscrollcommand=scrollProd_ventas.set
 )
 listaProd_ventas.grid(
     padx=40,
@@ -140,8 +140,6 @@ listaProd_ventas.grid(
     sticky=NSEW
 )
 listaProd_ventas.propagate(0)
-scrollProd_ventas = Scrollbar(listaProd_ventas)
-scrollProd_ventas.pack(side=RIGHT, fill=Y)
 
 
 
@@ -236,7 +234,7 @@ venderBoton_ventas.config(
 revVentasFrame = Frame(opcionesFrame)
 revVentasFrame.config(
     bg=back,
-    width=600,
+    width=750,
     height=460
 )
 revVentasFrame.grid_propagate(False)
@@ -273,6 +271,17 @@ tipoInfVentasLabel_revVentas.grid(
     column=1,
     sticky=NSEW
 )
+    #cuadro
+buscarCuadro_revVentas = ttk.Combobox(
+    revVentasFrame,
+    values=[]
+)
+buscarCuadro_revVentas.grid(
+    row=8,
+    column=1,
+    columnspan=1,
+    sticky=NSEW
+)
 opcionFecha = StringVar()
 opcionFecha.set(None)
 opcionOrden = StringVar()
@@ -280,10 +289,11 @@ opcionOrden.set(None)
     #radio boton para las opciones de informe de ventas
 rb_semanal = Radiobutton(
     revVentasFrame,
-    text="Informe semanal",
+    text="Informe Semanal",
     value='Semanal',
     bg=back,fg=btfg,
-    variable=opcionFecha
+    variable=opcionFecha,
+    command=lambda *args:Func.cambiarListaFechas(buscarCuadro_revVentas,lista_semanas,lista_meses,opcionFecha.get())
 ).grid(
     row=2,
     column=1,
@@ -291,10 +301,11 @@ rb_semanal = Radiobutton(
 )
 rb_mensual = Radiobutton(
     revVentasFrame,
-    text="Informe mensual",
+    text="Informe Mensual",
     value='Mensual',
     bg=back,fg=btfg,
-    variable=opcionFecha
+    variable=opcionFecha,
+    command=lambda *args:Func.cambiarListaFechas(buscarCuadro_revVentas,lista_semanas,lista_meses,opcionFecha.get())
 ).grid(
     row=3,
     column=1,
@@ -302,8 +313,8 @@ rb_mensual = Radiobutton(
 )
 rb_masVendidos = Radiobutton(
     revVentasFrame,
-    text="Más vendidos",
-    value='Mas',
+    text="Más Vendidos",
+    value='Más',
     bg=back,fg=btfg,
     variable=opcionOrden
 ).grid(
@@ -313,7 +324,7 @@ rb_masVendidos = Radiobutton(
 )
 rb_menosVendidos = Radiobutton(
     revVentasFrame,
-    text="Menos vendidos",
+    text="Menos Vendidos",
     value='Menos',
     bg=back,fg=btfg,
     variable=opcionOrden
@@ -322,22 +333,29 @@ rb_menosVendidos = Radiobutton(
     column=1,
     sticky=W
 )
-    #cuadro
-buscarCuadro_revVentas = ttk.Combobox(
-    revVentasFrame,
-    values=Fechas
+    #lista de la busqueda
+listaBusqFrame_revVentas = Frame(revVentasFrame)
+listaBusqFrame_revVentas.config(
+    bd=3,
+    relief=SUNKEN,
+    width=400,
+    height=300
 )
-buscarCuadro_revVentas.grid(
-    row=8,
-    column=1,
-    columnspan=1,
+listaBusqFrame_revVentas.grid(
+    padx=7,
+    pady=1,
+    row=2,
+    column=4,
+    rowspan=20,
+    columnspan=2,
     sticky=NSEW
 )
+listaBusqFrame_revVentas.propagate(0)
     #boton
 buscarBoton_revVentas = Button(
     revVentasFrame,
-    text="Buscar",
-    command=lambda *args :Func.actualizarListaFechas(buscarCuadro_revVentas,buscarCuadro_revVentas.get(),opcionFecha.get(),opcionOrden.get())
+    text="Generar",
+    command=lambda:Func.generarInforme(opcionOrden.get(),buscarCuadro_revVentas.get(),listaBusqFrame_revVentas)
 )
 buscarBoton_revVentas.config(bg=bt1,fg=btfg)
 buscarBoton_revVentas.grid(
@@ -360,25 +378,6 @@ buscarBoton_revVentas.config(
     bd=2,
     overrelief="raised"
 )
-    #lista de la busqueda
-listaBusqFrame_revVentas = Frame(revVentasFrame)
-listaBusqFrame_revVentas.config(
-    bd=3,
-    relief=SUNKEN,
-    width=250,
-    height=300
-)
-listaBusqFrame_revVentas.grid(
-    padx=7,
-    pady=1,
-    row=2,
-    column=4,
-    rowspan=20,
-    columnspan=2,
-    sticky=NSEW
-)
-listaBusqFrame_revVentas.propagate(0)
-        #scroll para la lista
     #boton para expotar datos de la venta
 exportarBoton_revVentas = Button(revVentasFrame, text="Exportar") #, command = funcion para insertar frame
 exportarBoton_revVentas.grid(
@@ -806,7 +805,7 @@ listaBusqFrame_verStock.grid(
     columnspan=2,
     sticky=NSEW
 )
-listaBusqFrame_verStock.grid_propagate(0)
+listaBusqFrame_verStock.propagate(0)
     #boton
 mostrarBoton_verStock = Button(
     verStockFrame,

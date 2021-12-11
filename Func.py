@@ -1,6 +1,7 @@
 from logging import lastResort
 from tkinter import *
 from tkinter import ttk
+import datetime
 import CON_PROC
 
 def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
@@ -378,11 +379,6 @@ def actualizarListaINI(busqueda):
         aux.append([fila[1],fila[3]])
     return tuple(aux)
 
-def actualizarListaFechas(buscarCuadro_revVentas,busqueda,opcionFecha,opcionOrden):
-    lista=list(buscarCuadro_revVentas['values'])
-    lista.append(opcionFecha)
-    buscarCuadro_revVentas['values']=tuple(lista)
-
 def MostrarStock(combobox,nombre,codigo,precio,marca,stock,bodega,local):
     if combobox.get() != '':
         cod,nom=separNomCod(combobox.get())
@@ -453,7 +449,14 @@ def frame_verStock(frame,resultado,opcion):
         tree.insert('', 'end',text= "1",values=('General',resultado[4]))
         tree.insert('', 'end',text= "1",values=(resultado[8],resultado[7]))
         tree.insert('', 'end',text= "1",values=(resultado[6],resultado[5]))
-        tree.pack()
+        tree.pack(side=TOP,fill=BOTH,expand=True)
+        scrollx = Scrollbar(tree,orient=HORIZONTAL)
+        scrollx.pack(side=BOTTOM, fill=X)
+        scrolly = Scrollbar(tree,orient=VERTICAL)
+        scrolly.pack(side=RIGHT, fill=Y)
+        tree.config(xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+        scrollx.config(command=tree.xview)
+        scrolly.config(command=tree.yview)
     else:  
         tree=ttk.Treeview(frame,column=("c1","c2","c3","c4","c5"),show='headings')
         tree.column("# 1",anchor=CENTER,width=70)
@@ -471,11 +474,25 @@ def frame_verStock(frame,resultado,opcion):
         if opcion=='Bodega': 
             labelNombre=Label(frame,text='Stock en Bodega')
             labelNombre.pack()
-            tree.pack()
+            tree.pack(side=TOP,fill=BOTH,expand=True)
+            scrollx = Scrollbar(tree,orient=HORIZONTAL)
+            scrollx.pack(side=BOTTOM, fill=X)
+            scrolly = Scrollbar(tree,orient=VERTICAL)
+            scrolly.pack(side=RIGHT, fill=Y)
+            tree.config(xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+            scrollx.config(command=tree.xview)
+            scrolly.config(command=tree.yview)
         elif opcion=='Tienda':
             labelNombre=Label(frame,text='Stock en Tienda')
             labelNombre.pack()
-            tree.pack()
+            tree.pack(side=TOP,fill=BOTH,expand=True)
+            scrollx = Scrollbar(tree,orient=HORIZONTAL)
+            scrollx.pack(side=BOTTOM, fill=X)
+            scrolly = Scrollbar(tree,orient=VERTICAL)
+            scrolly.pack(side=RIGHT, fill=Y)
+            tree.config(xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+            scrollx.config(command=tree.xview)
+            scrolly.config(command=tree.yview)
 
 def GenerarInformeStock(datosProd,opcion,frame):
     resultado=[]
@@ -492,3 +509,101 @@ def GenerarInformeStock(datosProd,opcion,frame):
         sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod;"
         resultado=CON_PROC.stocks_loc_bod(sentecia)
         frame_verStock(frame,resultado,opcion)
+
+def rellenarSemanas():
+    semanas=[]
+    dia_actual=datetime.datetime.today().weekday()
+    semanas.append([(datetime.datetime.today()-datetime.timedelta(days=dia_actual)).strftime('%Y-%m-%d'),'/',
+    datetime.datetime.today().strftime('%Y-%m-%d')])
+    for i in range(6):
+        semanas.append(
+            [(datetime.datetime.today()-datetime.timedelta(days=dia_actual+(7*(i+1)))).strftime('%Y-%m-%d'),'/',
+            (datetime.datetime.today()+datetime.timedelta(days=6-dia_actual)-datetime.timedelta(7*(i+1))).strftime('%Y-%m-%d')]
+        )
+    return semanas
+
+def rellenarMeses():
+    meses=[]
+    mesesR=[]
+    dia_mes=int((datetime.datetime.today()-datetime.timedelta(days=1)).strftime('%d'))
+    mesesR.append(
+        [datetime.datetime.today()-datetime.timedelta(days=dia_mes),
+        datetime.datetime.today()]
+    )
+    meses.append(
+        [(datetime.datetime.today()-datetime.timedelta(days=dia_mes)).strftime('%Y-%m-%d'),'/',
+        datetime.datetime.today().strftime('%Y-%m-%d')]
+    )
+    for i in range(6):
+        dia_mes=int((mesesR[i][0]-datetime.timedelta(days=1)).strftime('%d'))
+        mesesR.append(
+            [mesesR[i][0]-datetime.timedelta(days=dia_mes),
+            mesesR[i][0]-datetime.timedelta(days=1)]
+        )
+        meses.append(
+            [(mesesR[i][0]-datetime.timedelta(days=dia_mes)).strftime('%Y-%m-%d'),'/',
+            (mesesR[i][0]-datetime.timedelta(days=1)).strftime('%Y-%m-%d')]
+        )
+    return meses
+
+def cambiarListaFechas(combobox,listaS,listaM,opcion):
+    if opcion=='Semanal':
+        combobox['values']=tuple(listaS)
+    if opcion=='Mensual':
+        combobox['values']=tuple(listaM)
+
+def getFechas(fechas):
+    fechaIni=''
+    fechaFin=''
+    for letra in fechas:
+        if letra == ' ':
+            break
+        fechaIni=fechaIni+letra
+    for letra in reversed(fechas):
+        if letra == ' ':
+            break
+        fechaFin=letra+fechaFin
+    return fechaIni,fechaFin
+
+def mostrarInformeFrame(frame,label,resultados):
+    labelNombre=Label(frame,text=label)
+    labelNombre.pack()
+    tree=ttk.Treeview(frame,column=("c1","c2","c3","c4","c5","c6"),show='headings')
+    tree.column("# 1",anchor=CENTER,width=70)
+    tree.heading("# 1",text='Producto')
+    tree.column("# 2",anchor=CENTER,width=95)
+    tree.heading("# 2",text='Código de Barra')
+    tree.column("# 3",anchor=CENTER,width=90)
+    tree.heading("# 3",text='Precio Unidad')
+    tree.column("# 4",anchor=CENTER,width=70)
+    tree.heading("# 4",text='Marca')
+    tree.column("# 5",anchor=CENTER,width=90)
+    tree.heading("# 5",text='Total Vendido')
+    tree.column("# 6",anchor=CENTER,width=80)
+    tree.heading("# 6",text='Ganancia')
+    for dato in resultados:
+        tree.insert('', 'end',text= "1",values=dato)
+    tree.pack(side=TOP,fill=BOTH,expand=True)
+    scrollx = Scrollbar(tree,orient=HORIZONTAL)
+    scrollx.pack(side=BOTTOM, fill=X)
+    scrolly = Scrollbar(tree,orient=VERTICAL)
+    scrolly.pack(side=RIGHT, fill=Y)
+    tree.config(xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+    scrollx.config(command=tree.xview)
+    scrolly.config(command=tree.yview)
+
+def generarInforme(opcionOrden,listaFechas,frame):
+    resultados=[]
+    for widget in frame.winfo_children():
+        widget.destroy()
+    if listaFechas != '':
+        fechaIni,fechaFin=getFechas(listaFechas)
+        if opcionOrden=='Más':
+            sentencia="select p.nom,p.cod_bar,p.prec,p.marca,SUM(pv.cant),(SUM(pv.cant)*p.prec) from producto as p,producto_vendido as pv,venta_diaria as vd where p.id_prod=pv.id_prod and vd.cod_ven=pv.cod_ven and vd.fecha between '{}' and '{}' group by p.id_prod order by SUM(pv.cant) desc;"
+            resultados=CON_PROC.informeVentas(sentencia,fechaIni,fechaFin)
+        if opcionOrden=='Menos':
+            sentencia="select p.nom,p.cod_bar,p.prec,p.marca,SUM(pv.cant),(SUM(pv.cant)*p.prec) from producto as p,producto_vendido as pv,venta_diaria as vd where p.id_prod=pv.id_prod and vd.cod_ven=pv.cod_ven and vd.fecha between '{}' and '{}' group by p.id_prod order by SUM(pv.cant) asc;"
+            resultados=CON_PROC.informeVentas(sentencia,fechaIni,fechaFin)
+        if resultados!=[]:
+            label='Informe de Ventas ('+listaFechas+') - '+opcionOrden+' Vendidos'
+            mostrarInformeFrame(frame,label,resultados)
