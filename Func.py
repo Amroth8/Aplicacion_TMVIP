@@ -1,6 +1,7 @@
 from logging import lastResort
 from tkinter import *
 from tkinter import ttk
+import datetime
 import CON_PROC
 
 def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
@@ -54,41 +55,122 @@ def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
         actStock.grid_propagate(False)
 
 
-def buscarAdmVentas(dato,lbox,resultadosPD):
-    resultados=CON_PROC.buscarprod(dato)
-    resultadosPD={'nombre': [],'marca':[],'precio':[], 'codigo':[]} #Para luego trabajar con Panda
+def buscarAdmVentas(dato,lbox,lista_id):
+    resultados=CON_PROC.buscarprodVenta(dato)
     lbox.delete(0, END)
     for item in range(len(resultados)):
-        lbox.insert(END, str(resultados[item][0])+') '+resultados[item][1]+' '+resultados[item][5]+' - '+str(resultados[item][4]))
+        lbox.insert(END, resultados[item][0]+' - "'+resultados[item][4]+'" - ('+str(resultados[item][1])+') - $'+str(resultados[item][3]))
         lbox.itemconfig(item)
-        resultadosPD["nombre"].append(resultados[item][1])
-        resultadosPD["marca"].append(resultados[item][5])
-        resultadosPD["precio"].append(resultados[item][4])
-        resultadosPD["codigo"].append(resultados[item][3])
+        lista_id.append(resultados[item][5])
 
+def getPrecio(dato):
+    precio=''
+    for letra in reversed(dato):
+        if letra == '$' or letra == ' ':
+            break
+        precio=letra+precio
+    return int(precio)
 
+def getCant(dato):
+    cantidad1=''
+    cantidad=''
+    for letra in dato:
+        if letra == ')':
+            break
+        cantidad1=cantidad1+letra
+    for letra in reversed(cantidad1):
+        if letra == '(':
+            break
+        cantidad=letra+cantidad
+    return int(cantidad)
 
-def agregarAdmVentas(lbox, lbox2, resultadosPD):
+def updateDatos(datos,cant):
+    mitad1=''
+    mitad2=''
+    for letra in datos:
+        mitad1=mitad1+letra
+        if letra == '(':
+            break
+    for letra in reversed(datos):
+        mitad2=letra+mitad2
+        if letra == ')':
+            break
+    return mitad1+str(cant)+mitad2
+
+def datosFrame2(datos):
+    mitad1=''
+    mitad2=''
+    for letra in datos:
+        if letra == '(':
+            break
+        mitad1=mitad1+letra
+    for letra in reversed(datos):
+        if letra == ')':
+            break
+        mitad2=letra+mitad2
+    return mitad1[:len(mitad1)-2]+mitad2
+
+def updateLbox(lbox,cant,datoAct):
+    for i in range(lbox.size()):
+        if lbox.get(i)==datoAct:
+            lbox.delete(i)
+            lbox.insert(i, updateDatos(datoAct,cant))
+
+def mismoProducto(dato1,dato2):
+    if datosFrame2(dato1)==dato2:
+        return True
+    else:
+        return False
+
+def updateLboxBorrar(lbox,datoAct):
+    for i in range(lbox.size()):
+        if mismoProducto(lbox.get(i),datoAct):
+            datos=lbox.get(i)
+            cant=getCant(lbox.get(i))
+            lbox.delete(i)
+            lbox.insert(i, updateDatos(datos,cant+1))
+
+def agregarAdmVentas(lbox, lbox2,totalVenta,Lista_id,Lista_id_venta):
     selecciones=[]
-    print(resultadosPD)
-    seleccion = lbox.curselection()
-    for i in seleccion:
+    for i in lbox.curselection():
         ag = lbox.get(i)
-        selecciones.append(ag)
+        cant=getCant(ag)
+        if cant>0:
+            Lista_id_venta.append(Lista_id[i])
+            updateLbox(lbox,cant-1,ag)
+            selecciones.append(ag)
     for item in range(len(selecciones)):
-        lbox2.insert(END, selecciones[item])
+        venta=getPrecio(selecciones[item])+getPrecio(totalVenta['text'])
+        totalVenta['text']="Total: "+str(venta)
+        lbox2.insert(END, datosFrame2(selecciones[item]))
         lbox2.itemconfig(item)
 
-def borrarAdmVentas(lbox):
-    seleccion = lbox.curselection()
+def borrarAdmVentas(lbox,lbox2,totalVenta,lista_id_ventas):
+    seleccion = lbox2.curselection()
     pos = 0
     for i in seleccion:
         indice = int(i) - pos
-        lbox.delete(indice,indice)
+        venta=getPrecio(totalVenta['text'])-getPrecio(lbox2.get(indice))
+        totalVenta['text']="Total: "+str(venta)
+        updateLboxBorrar(lbox,lbox2.get(indice))
+        lbox2.delete(indice,indice)
+        del lista_id_ventas[indice]
         pos = pos + 1
 
-def venderAdmVentas(lbox):
-    print('excel')
+def venderAdmVentas(lbox,lista_id_ventas,totalLabel_ventas):
+    lista_cant=[]
+    lista_cant.append([lista_id_ventas[0],1])
+    for i in range(1,len(lista_id_ventas)):
+        agregar=True
+        for j in range(len(lista_cant)):
+            if lista_id_ventas[i]==lista_cant[j][0]:
+                agregar=False
+                lista_cant[j][1]+=1
+        if agregar:
+            lista_cant.append([lista_id_ventas[i],1])
+    CON_PROC.ingresoVentas(lista_cant,getPrecio(totalLabel_ventas['text']))
+    lbox.delete(0,END)
+    totalLabel_ventas['text']="Total: 0"
 
 def verificar_datos_act(codigo,precio,label):
     try:
@@ -297,11 +379,6 @@ def actualizarListaINI(busqueda):
         aux.append([fila[1],fila[3]])
     return tuple(aux)
 
-def actualizarListaFechas(buscarCuadro_revVentas,busqueda,opcionFecha,opcionOrden):
-    lista=list(buscarCuadro_revVentas['values'])
-    lista.append(opcionFecha)
-    buscarCuadro_revVentas['values']=tuple(lista)
-
 def MostrarStock(combobox,nombre,codigo,precio,marca,stock,bodega,local):
     if combobox.get() != '':
         cod,nom=separNomCod(combobox.get())
@@ -372,7 +449,14 @@ def frame_verStock(frame,resultado,opcion):
         tree.insert('', 'end',text= "1",values=('General',resultado[4]))
         tree.insert('', 'end',text= "1",values=(resultado[8],resultado[7]))
         tree.insert('', 'end',text= "1",values=(resultado[6],resultado[5]))
-        tree.pack()
+        tree.pack(side=TOP,fill=BOTH,expand=True)
+        scrollx = Scrollbar(tree,orient=HORIZONTAL)
+        scrollx.pack(side=BOTTOM, fill=X)
+        scrolly = Scrollbar(tree,orient=VERTICAL)
+        scrolly.pack(side=RIGHT, fill=Y)
+        tree.config(xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+        scrollx.config(command=tree.xview)
+        scrolly.config(command=tree.yview)
     else:  
         tree=ttk.Treeview(frame,column=("c1","c2","c3","c4","c5"),show='headings')
         tree.column("# 1",anchor=CENTER,width=70)
@@ -390,11 +474,25 @@ def frame_verStock(frame,resultado,opcion):
         if opcion=='Bodega': 
             labelNombre=Label(frame,text='Stock en Bodega')
             labelNombre.pack()
-            tree.pack()
+            tree.pack(side=TOP,fill=BOTH,expand=True)
+            scrollx = Scrollbar(tree,orient=HORIZONTAL)
+            scrollx.pack(side=BOTTOM, fill=X)
+            scrolly = Scrollbar(tree,orient=VERTICAL)
+            scrolly.pack(side=RIGHT, fill=Y)
+            tree.config(xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+            scrollx.config(command=tree.xview)
+            scrolly.config(command=tree.yview)
         elif opcion=='Tienda':
             labelNombre=Label(frame,text='Stock en Tienda')
             labelNombre.pack()
-            tree.pack()
+            tree.pack(side=TOP,fill=BOTH,expand=True)
+            scrollx = Scrollbar(tree,orient=HORIZONTAL)
+            scrollx.pack(side=BOTTOM, fill=X)
+            scrolly = Scrollbar(tree,orient=VERTICAL)
+            scrolly.pack(side=RIGHT, fill=Y)
+            tree.config(xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+            scrollx.config(command=tree.xview)
+            scrolly.config(command=tree.yview)
 
 def GenerarInformeStock(datosProd,opcion,frame):
     resultado=[]
@@ -411,3 +509,101 @@ def GenerarInformeStock(datosProd,opcion,frame):
         sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod;"
         resultado=CON_PROC.stocks_loc_bod(sentecia)
         frame_verStock(frame,resultado,opcion)
+
+def rellenarSemanas():
+    semanas=[]
+    dia_actual=datetime.datetime.today().weekday()
+    semanas.append([(datetime.datetime.today()-datetime.timedelta(days=dia_actual)).strftime('%Y-%m-%d'),'/',
+    datetime.datetime.today().strftime('%Y-%m-%d')])
+    for i in range(6):
+        semanas.append(
+            [(datetime.datetime.today()-datetime.timedelta(days=dia_actual+(7*(i+1)))).strftime('%Y-%m-%d'),'/',
+            (datetime.datetime.today()+datetime.timedelta(days=6-dia_actual)-datetime.timedelta(7*(i+1))).strftime('%Y-%m-%d')]
+        )
+    return semanas
+
+def rellenarMeses():
+    meses=[]
+    mesesR=[]
+    dia_mes=int((datetime.datetime.today()-datetime.timedelta(days=1)).strftime('%d'))
+    mesesR.append(
+        [datetime.datetime.today()-datetime.timedelta(days=dia_mes),
+        datetime.datetime.today()]
+    )
+    meses.append(
+        [(datetime.datetime.today()-datetime.timedelta(days=dia_mes)).strftime('%Y-%m-%d'),'/',
+        datetime.datetime.today().strftime('%Y-%m-%d')]
+    )
+    for i in range(6):
+        dia_mes=int((mesesR[i][0]-datetime.timedelta(days=1)).strftime('%d'))
+        mesesR.append(
+            [mesesR[i][0]-datetime.timedelta(days=dia_mes),
+            mesesR[i][0]-datetime.timedelta(days=1)]
+        )
+        meses.append(
+            [(mesesR[i][0]-datetime.timedelta(days=dia_mes)).strftime('%Y-%m-%d'),'/',
+            (mesesR[i][0]-datetime.timedelta(days=1)).strftime('%Y-%m-%d')]
+        )
+    return meses
+
+def cambiarListaFechas(combobox,listaS,listaM,opcion):
+    if opcion=='Semanal':
+        combobox['values']=tuple(listaS)
+    if opcion=='Mensual':
+        combobox['values']=tuple(listaM)
+
+def getFechas(fechas):
+    fechaIni=''
+    fechaFin=''
+    for letra in fechas:
+        if letra == ' ':
+            break
+        fechaIni=fechaIni+letra
+    for letra in reversed(fechas):
+        if letra == ' ':
+            break
+        fechaFin=letra+fechaFin
+    return fechaIni,fechaFin
+
+def mostrarInformeFrame(frame,label,resultados):
+    labelNombre=Label(frame,text=label)
+    labelNombre.pack()
+    tree=ttk.Treeview(frame,column=("c1","c2","c3","c4","c5","c6"),show='headings')
+    tree.column("# 1",anchor=CENTER,width=70)
+    tree.heading("# 1",text='Producto')
+    tree.column("# 2",anchor=CENTER,width=95)
+    tree.heading("# 2",text='Código de Barra')
+    tree.column("# 3",anchor=CENTER,width=90)
+    tree.heading("# 3",text='Precio Unidad')
+    tree.column("# 4",anchor=CENTER,width=70)
+    tree.heading("# 4",text='Marca')
+    tree.column("# 5",anchor=CENTER,width=90)
+    tree.heading("# 5",text='Total Vendido')
+    tree.column("# 6",anchor=CENTER,width=80)
+    tree.heading("# 6",text='Ganancia')
+    for dato in resultados:
+        tree.insert('', 'end',text= "1",values=dato)
+    tree.pack(side=TOP,fill=BOTH,expand=True)
+    scrollx = Scrollbar(tree,orient=HORIZONTAL)
+    scrollx.pack(side=BOTTOM, fill=X)
+    scrolly = Scrollbar(tree,orient=VERTICAL)
+    scrolly.pack(side=RIGHT, fill=Y)
+    tree.config(xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+    scrollx.config(command=tree.xview)
+    scrolly.config(command=tree.yview)
+
+def generarInforme(opcionOrden,listaFechas,frame):
+    resultados=[]
+    for widget in frame.winfo_children():
+        widget.destroy()
+    if listaFechas != '':
+        fechaIni,fechaFin=getFechas(listaFechas)
+        if opcionOrden=='Más':
+            sentencia="select p.nom,p.cod_bar,p.prec,p.marca,SUM(pv.cant),(SUM(pv.cant)*p.prec) from producto as p,producto_vendido as pv,venta_diaria as vd where p.id_prod=pv.id_prod and vd.cod_ven=pv.cod_ven and vd.fecha between '{}' and '{}' group by p.id_prod order by SUM(pv.cant) desc;"
+            resultados=CON_PROC.informeVentas(sentencia,fechaIni,fechaFin)
+        if opcionOrden=='Menos':
+            sentencia="select p.nom,p.cod_bar,p.prec,p.marca,SUM(pv.cant),(SUM(pv.cant)*p.prec) from producto as p,producto_vendido as pv,venta_diaria as vd where p.id_prod=pv.id_prod and vd.cod_ven=pv.cod_ven and vd.fecha between '{}' and '{}' group by p.id_prod order by SUM(pv.cant) asc;"
+            resultados=CON_PROC.informeVentas(sentencia,fechaIni,fechaFin)
+        if resultados!=[]:
+            label='Informe de Ventas ('+listaFechas+') - '+opcionOrden+' Vendidos'
+            mostrarInformeFrame(frame,label,resultados)

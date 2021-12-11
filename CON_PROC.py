@@ -29,6 +29,33 @@ def buscarprod (datos)  :
             print("Conexion finalizada.")
             return resultados
         return resultados
+
+def buscarprodVenta (datos)  :
+    resultados=[]
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+        )
+        if conexion.is_connected() :
+            print("Conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "SELECT p.nom,sl.cant,p.cod_bar,p.prec,p.marca,p.id_prod FROM producto as p, stock_local as sl WHERE p.id_prod=sl.id_prod and p.nom like '%{}%' and sl.cant>0"
+            cursor.execute(sentencia.format(datos))
+            resultados = cursor.fetchall()
+        else    :
+            print("Dato no encontrado") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+            return resultados
+        return resultados
                         
 def buscarprodUnico (nom,codigo)  :
     resultados=[]
@@ -425,6 +452,73 @@ def stock_producto(nom,cod):
             id_prod=resultados[0][0]
             sentencia = "select p.nom,p.cod_bar,p.prec,p.marca,p.cant,sl.cant as cant_loc,l.nom as nom_loc,sb.cant as cant_bod,b.direcb from producto as p, stock_local as sl, locall as l, stock_bodega as sb, bodega as b where sl.id_loc=l.id_loc and sl.id_prod=p.id_prod and sb.id_bod=b.id_bod and sb.id_prod=p.id_prod and p.id_prod={};"
             cursor.execute(sentencia.format(id_prod))
+            resultados = cursor.fetchall()
+        else    :
+            print("Dato no encontrado") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+            return resultados
+        return resultados
+
+def ingresoVentas(lista_id,monto)  :
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+    )
+        if conexion.is_connected() :
+            print("conexion exitosa.")
+            cursor=conexion.cursor()
+            sentencia = "select MAX(cod_ven) from venta_diaria;"
+            cursor.execute(sentencia)
+            resultados = cursor.fetchall()
+            if resultados[0][0]==None:
+                cod_venta=1
+            else:
+                cod_venta=resultados[0][0]+1
+            sentencia = "INSERT INTO venta_diaria (cod_ven,fecha,hora,mon_tot,id_loc) VALUES({},NOW(),NOW(),{},1);"
+            cursor.execute(sentencia.format(cod_venta,monto))
+            conexion.commit()
+            for dato in lista_id:
+                sentencia = "INSERT INTO producto_vendido (id_prod,cant,cod_ven) VALUES({},{},{});"
+                cursor.execute(sentencia.format(dato[0],dato[1],cod_venta))
+                sentencia = "SELECT p.cant,sl.cant FROM producto as p, stock_local as sl WHERE p.id_prod=sl.id_prod and p.id_prod={};"
+                cursor.execute(sentencia.format(dato[0]))
+                resultados = cursor.fetchall()
+                sentencia = "UPDATE stock_local SET cant={} WHERE id_prod={} and id_loc=1"
+                cursor.execute(sentencia.format(resultados[0][1]-dato[1],dato[0]))
+                sentencia = "UPDATE producto SET cant={} WHERE id_prod={}"
+                cursor.execute(sentencia.format(resultados[0][0]-dato[1],dato[0]))
+            conexion.commit()
+            print("Registro actualizado con exito") 
+    except Error as ex :
+        print("Error de conexion", ex)
+    finally :
+        if  conexion.is_connected() :
+            conexion.close() #cierro conexion con la base
+            print("Conexion finalizada.")
+
+def informeVentas(sentencia,fechaIni,fechaFin):
+    resultados=[]
+    try :
+        conexion = mysql.connector.connect(
+        host = 'localhost',
+        port = 3306,
+        user = 'root',
+        password = 'admin1234',
+        db = 'todomarket_vip'
+        )
+        if conexion.is_connected() :
+            print("Conexion exitosa.")
+            cursor=conexion.cursor()
+            cursor.execute(sentencia.format(fechaIni,fechaFin))
             resultados = cursor.fetchall()
         else    :
             print("Dato no encontrado") 
