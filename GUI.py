@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 from PIL import Image
 from PIL import ImageTk
 from CON_PROC import eliminarProd
@@ -104,6 +105,7 @@ listaBusq_ventas.config(
     height=18,
     yscrollcommand=scrollBusqueda_ventas.set
 )
+scrollBusqueda_ventas.config(command=listaBusq_ventas.yview)
 listaBusq_ventas.grid(
     row=3,
     column=1,
@@ -132,6 +134,7 @@ listaProd_ventas.config(
     height=18,
     yscrollcommand=scrollProd_ventas.set
 )
+scrollProd_ventas.config(command=listaProd_ventas.yview)
 listaProd_ventas.grid(
     padx=40,
     row=3,
