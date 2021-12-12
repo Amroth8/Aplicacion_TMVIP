@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import ttk
 import datetime
 import CON_PROC
+import pandas as pd
 
 def cambiarFrame(frame,revVentas,ventas,actDatos,añadirProd,verStock,actStock):
     if frame == "ventas":
@@ -494,21 +495,72 @@ def frame_verStock(frame,resultado,opcion):
             scrollx.config(command=tree.xview)
             scrolly.config(command=tree.yview)
 
-def GenerarInformeStock(datosProd,opcion,frame):
+def GenerarInformeStock(datosProd, opcion, frame):
+    resultado = []
+    if opcion == 'Producto':
+        if datosProd != '':
+            codigo, nombre = separNomCod(datosProd)
+            resultado = CON_PROC.stock_producto(nombre, codigo)
+            frame_verStock(frame, resultado, opcion)
+
+    elif opcion == 'Bodega':
+        sentecia = "select p.nom,p.cod_bar,p.prec,p.marca,sb.cant,b.direcb from producto as p, stock_bodega as sb, bodega as b where sb.id_bod=b.id_bod and b.id_bod=1 and sb.id_prod=p.id_prod;"
+        resultado = CON_PROC.stocks_loc_bod(sentecia)
+        frame_verStock(frame, resultado, opcion)
+    elif opcion == 'Tienda':
+        sentecia = "select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod;"
+        resultado = CON_PROC.stocks_loc_bod(sentecia)
+        frame_verStock(frame, resultado, opcion)
+
+def crearExcelProducto(resultado):
+    dictPD = {"Nombre": [], "Codigo Barra": [], "Precio": [], "Marca": [], "Cantidad General": [], "Local 1":[], "Manuel Montt":[]}
+    for item in range(len(resultado)):
+        dictPD["Nombre"].insert(item, resultado[item][0])
+        dictPD["Codigo Barra"].insert(item, resultado[item][1])
+        dictPD["Precio"].insert(item, resultado[item][2])
+        dictPD["Marca"].insert(item, resultado[item][3])
+        dictPD["Cantidad General"].insert(item, resultado[item][4])
+        dictPD["Local 1"].insert(item, resultado[item][5])
+        dictPD["Manuel Montt"].insert(item, resultado[item][7])
+    stockData = pd.DataFrame(dictPD)
+    stockExcel = pd.ExcelWriter('Stock Producto.xlsx')
+    stockData.to_excel(stockExcel)
+    stockExcel.save()
+
+def crearExcel(resultado):
+    dictPD = {"Nombre": [], "Codigo Barra": [], "Precio": [], "Marca": [], "Cantidad": [], "Local":[]}
+    for item in range(len(resultado)):
+        dictPD["Nombre"].insert(item, resultado[item][0])
+        dictPD["Codigo Barra"].insert(item, resultado[item][1])
+        dictPD["Precio"].insert(item, resultado[item][2])
+        dictPD["Marca"].insert(item, resultado[item][3])
+        dictPD["Cantidad"].insert(item, resultado[item][4])
+        dictPD["Local"].insert(item, resultado[item][5])
+    stockData = pd.DataFrame(dictPD)
+    stockExcel = pd.ExcelWriter('Stock Tienda.xlsx')
+    stockData.to_excel(stockExcel)
+    stockExcel.save()
+
+
+def ExportarStock(datosProd,opcion):
     resultado=[]
     if opcion=='Producto':
         if datosProd!='':
             codigo,nombre=separNomCod(datosProd)
             resultado=CON_PROC.stock_producto(nombre,codigo)
-            frame_verStock(frame,resultado,opcion)
+            crearExcelProducto(resultado)
+
     elif opcion=='Bodega':
         sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sb.cant,b.direcb from producto as p, stock_bodega as sb, bodega as b where sb.id_bod=b.id_bod and b.id_bod=1 and sb.id_prod=p.id_prod;"
         resultado=CON_PROC.stocks_loc_bod(sentecia)
-        frame_verStock(frame,resultado,opcion)
+        crearExcel(resultado)
+
     elif opcion=='Tienda':
         sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod;"
         resultado=CON_PROC.stocks_loc_bod(sentecia)
-        frame_verStock(frame,resultado,opcion)
+        crearExcel(resultado)
+
+
 
 def rellenarSemanas():
     semanas=[]
@@ -607,3 +659,30 @@ def generarInforme(opcionOrden,listaFechas,frame):
         if resultados!=[]:
             label='Informe de Ventas ('+listaFechas+') - '+opcionOrden+' Vendidos'
             mostrarInformeFrame(frame,label,resultados)
+
+def crearExcelInforme(resultado):
+    dictPD = {"Nombre": [], "Codigo Barra": [], "Precio": [], "Marca": [], "Total Vendidos": [], "Ganancias": []}
+    for item in range(len(resultado)):
+        dictPD["Nombre"].insert(item, resultado[item][0])
+        dictPD["Codigo Barra"].insert(item, resultado[item][1])
+        dictPD["Precio"].insert(item, resultado[item][2])
+        dictPD["Marca"].insert(item, resultado[item][3])
+        dictPD["Total Vendidos"].insert(item, resultado[item][4])
+        dictPD["Ganancias"].insert(item, resultado[item][5])
+    stockData = pd.DataFrame(dictPD)
+    stockExcel = pd.ExcelWriter('Informe de Ventas.xlsx')
+    stockData.to_excel(stockExcel)
+    stockExcel.save()
+
+def generarInformeExcel(opcionOrden,listaFechas):
+    resultados = []
+    if listaFechas != '':
+        fechaIni, fechaFin = getFechas(listaFechas)
+        if opcionOrden == 'Más':
+            sentencia = "select p.nom,p.cod_bar,p.prec,p.marca,SUM(pv.cant),(SUM(pv.cant)*p.prec) from producto as p,producto_vendido as pv,venta_diaria as vd where p.id_prod=pv.id_prod and vd.cod_ven=pv.cod_ven and vd.fecha between '{}' and '{}' group by p.id_prod order by SUM(pv.cant) desc;"
+            resultados = CON_PROC.informeVentas(sentencia, fechaIni, fechaFin)
+            crearExcelInforme(resultados)
+        if opcionOrden == 'Menos':
+            sentencia = "select p.nom,p.cod_bar,p.prec,p.marca,SUM(pv.cant),(SUM(pv.cant)*p.prec) from producto as p,producto_vendido as pv,venta_diaria as vd where p.id_prod=pv.id_prod and vd.cod_ven=pv.cod_ven and vd.fecha between '{}' and '{}' group by p.id_prod order by SUM(pv.cant) asc;"
+            resultados = CON_PROC.informeVentas(sentencia, fechaIni, fechaFin)
+            crearExcelInforme(resultados)

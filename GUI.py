@@ -46,7 +46,7 @@ opcionesFrame.config(width="650", height="350")
 ventasFrame = Frame(opcionesFrame)
 ventasFrame.config(
     bg= back,
-    width=600,
+    width=750,
     height=550
 )
 ventasFrame.grid(
@@ -379,7 +379,9 @@ buscarBoton_revVentas.config(
     overrelief="raised"
 )
     #boton para expotar datos de la venta
-exportarBoton_revVentas = Button(revVentasFrame, text="Exportar") #, command = funcion para insertar frame
+exportarBoton_revVentas = Button(revVentasFrame, text="Exportar",
+    command=lambda:Func.generarInformeExcel(opcionOrden.get(),buscarCuadro_revVentas.get())
+) #, command = funcion para insertar frame
 exportarBoton_revVentas.grid(
     row=28,
     column=5,
@@ -826,8 +828,12 @@ buscarBoton_verStock.config(
     overrelief="raised"
 )
         #scroll para la lista
+def ExcelBox(): messagebox.showinfo(title="Exportar",message="Se ha generado un archivo Excel con el informe selecionado")
     #boton para expotar datos de la venta
-exportarBoton_verStock = Button(verStockFrame, text="Exportar") #, command = funcion para insertar frame
+exportarBoton_verStock = Button(verStockFrame, text="Exportar",
+    bg=bt1,fg=btfg,
+    command=lambda:[Func.ExportarStock(buscarCuadro_verStock.get(),opcionesStock.get()),ExcelBox]
+) #, command = funcion para insertar frame
 exportarBoton_verStock.grid(
     row=23,
     column=5,
