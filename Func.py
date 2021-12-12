@@ -1,6 +1,8 @@
 from logging import lastResort
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
+import os
 import datetime
 import CON_PROC
 import pandas as pd
@@ -159,19 +161,22 @@ def borrarAdmVentas(lbox,lbox2,totalVenta,lista_id_ventas):
         pos = pos + 1
 
 def venderAdmVentas(lbox,lista_id_ventas,totalLabel_ventas):
-    lista_cant=[]
-    lista_cant.append([lista_id_ventas[0],1])
-    for i in range(1,len(lista_id_ventas)):
-        agregar=True
-        for j in range(len(lista_cant)):
-            if lista_id_ventas[i]==lista_cant[j][0]:
-                agregar=False
-                lista_cant[j][1]+=1
-        if agregar:
-            lista_cant.append([lista_id_ventas[i],1])
-    CON_PROC.ingresoVentas(lista_cant,getPrecio(totalLabel_ventas['text']))
-    lbox.delete(0,END)
-    totalLabel_ventas['text']="Total: 0"
+    if lista_id_ventas!=[]:
+        lista_cant=[]
+        lista_cant.append([lista_id_ventas[0],1])
+        for i in range(1,len(lista_id_ventas)):
+            agregar=True
+            for j in range(len(lista_cant)):
+                if lista_id_ventas[i]==lista_cant[j][0]:
+                    agregar=False
+                    lista_cant[j][1]+=1
+            if agregar:
+                lista_cant.append([lista_id_ventas[i],1])
+        CON_PROC.ingresoVentas(lista_cant,getPrecio(totalLabel_ventas['text']))
+        lbox.delete(0,END)
+        totalLabel_ventas['text']="Total: 0"
+        messagebox.showinfo(message="la venta se realizó con éxito", title="Venta")
+        
 
 def verificar_datos_act(codigo,precio,label):
     try:
@@ -198,12 +203,15 @@ def sentecia_actualizar(nombre,codigo,precio,marca,codigoAntiguo,datoAntiguo):
     segundo=False
     cant=0
     datos=[]
+    actualiza=False
     if nombre!='':
+        actualiza=True
         sentencia = sentencia+" nom='{}'"
         segundo=True
         datos.append(nombre)
         cant+=1
     if codigo!='':
+        actualiza=True
         if segundo:
             sentencia = sentencia+", cod_bar ={}"
             datos.append(codigo)
@@ -214,6 +222,7 @@ def sentecia_actualizar(nombre,codigo,precio,marca,codigoAntiguo,datoAntiguo):
             datos.append(codigo)
             cant+=1
     if precio!='':
+        actualiza=True
         if segundo:
             sentencia = sentencia+", prec ={}"
             datos.append(precio)
@@ -224,6 +233,7 @@ def sentecia_actualizar(nombre,codigo,precio,marca,codigoAntiguo,datoAntiguo):
             datos.append(precio)
             cant+=1
     if marca!='':
+        actualiza=True
         if segundo:
             sentencia = sentencia+", marca ='{}'"
             datos.append(marca)
@@ -240,7 +250,7 @@ def sentecia_actualizar(nombre,codigo,precio,marca,codigoAntiguo,datoAntiguo):
         sentencia = sentencia+"{}"
         cant+=1
         datos.append(0)
-    return datos,sentencia
+    return actualiza,datos,sentencia
 
 def separNomCod(dato):
     pos=0
@@ -264,8 +274,11 @@ def actualizar_datos(nombre,codigo,precio,marca,label,datoAntiguo):
         codigoAntiguo,datoAntiguo=separNomCod(datoAntiguo)
         if verificar_datos_act(codigo.get(),precio.get(),label):
             if CON_PROC.existe(datoAntiguo,codigoAntiguo):
-                datos,sentencia=sentecia_actualizar(nombre.get(),codigo.get(),precio.get(),marca.get(),codigoAntiguo,datoAntiguo)
-                CON_PROC.actualizarProd(datos,sentencia)
+                actualiza=False
+                actualiza,datos,sentencia=sentecia_actualizar(nombre.get(),codigo.get(),precio.get(),marca.get(),codigoAntiguo,datoAntiguo)
+                if actualiza:
+                    CON_PROC.actualizarProd(datos,sentencia)
+                    messagebox.showinfo(message='Se ha actualizado con éxito',title='actualización')
     nombre.delete(0,END)
     codigo.delete(0,END)
     precio.delete(0,END)
@@ -331,8 +344,12 @@ def añadir_productos(cuadroNombre,cuadroCod,cuadroPrec,cuadroMarca,cuadroLocal,
     cuadroBodega.delete(0,END)
 
 def nuevos_datos(nombre,codigo,precio,marca,cantLocal,cantBodega):
-    datos=[nombre,int(cantLocal)+int(cantBodega),codigo,precio,marca,cantLocal,cantBodega]
-    CON_PROC.agregarprod(datos)
+    if nombre!='':
+        datos=[nombre,int(cantLocal)+int(cantBodega),codigo,precio,marca,cantLocal,cantBodega]
+        CON_PROC.agregarprod(datos)
+        messagebox.showinfo(message='El producto se añadió con éxito',title='Añadir')
+    else:
+        messagebox.showinfo(message='No ha insertado nombre de producto',title='Añadir')
 
 def cantCorrecta(cant,label):
     try:
@@ -357,14 +374,17 @@ def actualizar_stock(cant,opcion,label,nom,cod,opcionLocal):
         if opcion == 'Tienda':
             if opcionLocal=='0':
                 CON_PROC.actualizarStockLocal(nom['text'],cod['text'],int(_cant))
+                messagebox.showinfo(message='El producto se actualizo con éxito',title='Actualizar Datos')
             elif opcionLocal=='1':
                 if not(CON_PROC.actualizarStockLocalBodega(nom['text'],cod['text'],int(_cant))):
                     label['text']="No hay cantidad suficiente en bodega"
+                else:
+                    messagebox.showinfo(message='El producto se actualizo con éxito',title='Actualizar Datos')
             else:
                 label['text']="Marque una opcion"
         elif opcion == 'Bodega':
             CON_PROC.actualizarStockBodega(nom['text'],cod['text'],int(_cant))
-
+            messagebox.showinfo(message='El producto se actualizo con éxito',title='Actualizar Datos')
 
 def actualizarLista(buscarCuadro_revVentas,busqueda):
     lista=CON_PROC.buscarprod(busqueda)
@@ -384,13 +404,16 @@ def MostrarStock(combobox,nombre,codigo,precio,marca,stock,bodega,local):
     if combobox.get() != '':
         cod,nom=separNomCod(combobox.get())
         datos=list(CON_PROC.buscarprodUnico(nom,cod))
-        nombre['text']=str(datos[1])
-        codigo['text']=str(datos[3])
-        precio['text']=str(datos[4])
-        marca['text']=str(datos[5])
-        stock['text']=str(datos[2])
-        bodega['text']=str(datos[6])
-        local['text']=str(datos[7])
+        if datos!=[]:
+            nombre['text']=str(datos[1])
+            codigo['text']=str(datos[3])
+            precio['text']=str(datos[4])
+            marca['text']=str(datos[5])
+            stock['text']=str(datos[2])
+            bodega['text']=str(datos[6])
+            local['text']=str(datos[7])
+        else:
+            messagebox.showinfo(message="Error, producto no existente", title="Actualizar Stock")
 
 def actualizarListaStock(buscarCuadro_revVentas,busqueda,opcionStock):
     lista=CON_PROC.buscarprod(busqueda)
@@ -403,18 +426,24 @@ def mostrarLabel(labelNombre,labelCodigo,labelPrecio,labelMarca,dato):
     if dato != '':
         codigo,dato=separNomCod(dato)
         datos=list(CON_PROC.buscarprodUnico(dato,codigo))
-        labelNombre['text']=str(datos[1])
-        labelCodigo['text']=str(datos[3])
-        labelPrecio['text']=str(datos[4])
-        labelMarca['text']=str(datos[5])
+        if datos!=[]:
+            labelNombre['text']=str(datos[1])
+            labelCodigo['text']=str(datos[3])
+            labelPrecio['text']=str(datos[4])
+            labelMarca['text']=str(datos[5])
 
-def eliminar_producto(nombre,codigo,labelNom,labelCod,labelPrec,labelMarca):
-    dato=[nombre['text'],codigo['text']]
-    labelNom['text']=''
-    labelCod['text']=''
-    labelPrec['text']=''
-    labelMarca['text']=''
-    CON_PROC.eliminarProd(dato)
+def eliminar_producto(nombre,codigo,labelNom,labelCod,labelPrec,labelMarca,combobox):
+    if nombre['text']!='':
+        if messagebox.askquestion(message="¿Desea eliminar el producto?", title="Eliminar") == 'yes':
+            dato=[nombre['text'],codigo['text']]
+            labelNom['text']=''
+            labelCod['text']=''
+            labelPrec['text']=''
+            labelMarca['text']=''
+            CON_PROC.eliminarProd(dato)
+            combobox.set('')
+    else:
+        messagebox.showinfo(message="No ha seleccionado ningún producto", title="Eliminar")
 
 def mostrar_opciones(label,rbS,rbN):
     rbN.grid(row=3,column=6,sticky=W)
@@ -512,8 +541,8 @@ def GenerarInformeStock(datosProd, opcion, frame):
         resultado = CON_PROC.stocks_loc_bod(sentecia)
         frame_verStock(frame, resultado, opcion)
 
-def crearExcelProducto(resultado):
-    dictPD = {"Nombre": [], "Codigo Barra": [], "Precio": [], "Marca": [], "Cantidad General": [], "Local 1":[], "Manuel Montt":[]}
+def crearExcelProducto(resultado,nombre):
+    dictPD = {"Nombre": [], "Codigo Barra": [], "Precio": [], "Marca": [], "Cantidad General": [], "Local 1":[], "Bodega":[]}
     for item in range(len(resultado)):
         dictPD["Nombre"].insert(item, resultado[item][0])
         dictPD["Codigo Barra"].insert(item, resultado[item][1])
@@ -521,13 +550,14 @@ def crearExcelProducto(resultado):
         dictPD["Marca"].insert(item, resultado[item][3])
         dictPD["Cantidad General"].insert(item, resultado[item][4])
         dictPD["Local 1"].insert(item, resultado[item][5])
-        dictPD["Manuel Montt"].insert(item, resultado[item][7])
+        dictPD["Bodega"].insert(item, resultado[item][7])
     stockData = pd.DataFrame(dictPD)
-    stockExcel = pd.ExcelWriter('Stock Producto.xlsx')
+    stockExcel = pd.ExcelWriter(nombre)
     stockData.to_excel(stockExcel)
     stockExcel.save()
+    messagebox.showinfo(message="Se genero el archivo correctamente ", title="Informe de Stock")
 
-def crearExcel(resultado):
+def crearExcel(resultado,nombre):
     dictPD = {"Nombre": [], "Codigo Barra": [], "Precio": [], "Marca": [], "Cantidad": [], "Local":[]}
     for item in range(len(resultado)):
         dictPD["Nombre"].insert(item, resultado[item][0])
@@ -537,9 +567,10 @@ def crearExcel(resultado):
         dictPD["Cantidad"].insert(item, resultado[item][4])
         dictPD["Local"].insert(item, resultado[item][5])
     stockData = pd.DataFrame(dictPD)
-    stockExcel = pd.ExcelWriter('Stock Tienda.xlsx')
+    stockExcel = pd.ExcelWriter(nombre)
     stockData.to_excel(stockExcel)
     stockExcel.save()
+    messagebox.showinfo(message="Se genero el archivo correctamente ", title="Informe de Stock")
 
 
 def ExportarStock(datosProd,opcion):
@@ -548,17 +579,18 @@ def ExportarStock(datosProd,opcion):
         if datosProd!='':
             codigo,nombre=separNomCod(datosProd)
             resultado=CON_PROC.stock_producto(nombre,codigo)
-            crearExcelProducto(resultado)
-
+            nombreAr='Stock General '+nombre+' ('+str(codigo)+').xlsx'
+            crearExcelProducto(resultado,nombreAr)
     elif opcion=='Bodega':
         sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sb.cant,b.direcb from producto as p, stock_bodega as sb, bodega as b where sb.id_bod=b.id_bod and b.id_bod=1 and sb.id_prod=p.id_prod;"
         resultado=CON_PROC.stocks_loc_bod(sentecia)
-        crearExcel(resultado)
-
+        nombreAr='Stock Bodega.xlsx'
+        crearExcel(resultado,nombreAr)
     elif opcion=='Tienda':
         sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod;"
         resultado=CON_PROC.stocks_loc_bod(sentecia)
-        crearExcel(resultado)
+        nombreAr='Stock Tienda.xlsx'
+        crearExcel(resultado,nombreAr)
 
 
 
@@ -586,7 +618,7 @@ def rellenarMeses():
         [(datetime.datetime.today()-datetime.timedelta(days=dia_mes)).strftime('%Y-%m-%d'),'/',
         datetime.datetime.today().strftime('%Y-%m-%d')]
     )
-    for i in range(6):
+    for i in range(3):
         dia_mes=int((mesesR[i][0]-datetime.timedelta(days=1)).strftime('%d'))
         mesesR.append(
             [mesesR[i][0]-datetime.timedelta(days=dia_mes),
@@ -660,7 +692,7 @@ def generarInforme(opcionOrden,listaFechas,frame):
             label='Informe de Ventas ('+listaFechas+') - '+opcionOrden+' Vendidos'
             mostrarInformeFrame(frame,label,resultados)
 
-def crearExcelInforme(resultado):
+def crearExcelInforme(resultado,nombre):
     dictPD = {"Nombre": [], "Codigo Barra": [], "Precio": [], "Marca": [], "Total Vendidos": [], "Ganancias": []}
     for item in range(len(resultado)):
         dictPD["Nombre"].insert(item, resultado[item][0])
@@ -670,9 +702,10 @@ def crearExcelInforme(resultado):
         dictPD["Total Vendidos"].insert(item, resultado[item][4])
         dictPD["Ganancias"].insert(item, resultado[item][5])
     stockData = pd.DataFrame(dictPD)
-    stockExcel = pd.ExcelWriter('Informe de Ventas.xlsx')
+    stockExcel = pd.ExcelWriter(nombre)
     stockData.to_excel(stockExcel)
     stockExcel.save()
+    messagebox.showinfo(message="Se genero el archivo correctamente ", title="Informe de Ventas")
 
 def generarInformeExcel(opcionOrden,listaFechas):
     resultados = []
@@ -681,8 +714,10 @@ def generarInformeExcel(opcionOrden,listaFechas):
         if opcionOrden == 'Más':
             sentencia = "select p.nom,p.cod_bar,p.prec,p.marca,SUM(pv.cant),(SUM(pv.cant)*p.prec) from producto as p,producto_vendido as pv,venta_diaria as vd where p.id_prod=pv.id_prod and vd.cod_ven=pv.cod_ven and vd.fecha between '{}' and '{}' group by p.id_prod order by SUM(pv.cant) desc;"
             resultados = CON_PROC.informeVentas(sentencia, fechaIni, fechaFin)
-            crearExcelInforme(resultados)
+            nombre='Informe de Ventas'+fechaIni+'--'+fechaFin+' Mas vendidos.xlsx'
+            crearExcelInforme(resultados,nombre)
         if opcionOrden == 'Menos':
             sentencia = "select p.nom,p.cod_bar,p.prec,p.marca,SUM(pv.cant),(SUM(pv.cant)*p.prec) from producto as p,producto_vendido as pv,venta_diaria as vd where p.id_prod=pv.id_prod and vd.cod_ven=pv.cod_ven and vd.fecha between '{}' and '{}' group by p.id_prod order by SUM(pv.cant) asc;"
             resultados = CON_PROC.informeVentas(sentencia, fechaIni, fechaFin)
-            crearExcelInforme(resultados)
+            nombre='Informe de Ventas '+fechaIni+'--'+fechaFin+' Menos vendidos.xlsx'
+            crearExcelInforme(resultados,nombre)

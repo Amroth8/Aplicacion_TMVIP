@@ -482,7 +482,7 @@ labelMarcaVar_actDatos.grid(row=6,column=2,sticky=W)
     #boton buscar
 mostrarBoton_actDatos = Button(
     actDatosFrame,
-    text="Mostrar",
+    text="Seleccionar",
     bg=bt1,fg=btfg,
     command=lambda:Func.mostrarLabel(labelNombreVar_actDatos,labelCodigoVar_actDatos,labelPrecioVar_actDatos,labelMarcaVar_actDatos,buscarCuadro_actDatos.get())
 )
@@ -587,7 +587,7 @@ listaDatosLabel_actDatos.grid(
 actualizarBoton_actDatos = Button(
     actDatosFrame, 
     text="Eliminar",
-    command=lambda:Func.eliminar_producto(labelNombreVar_actDatos,labelCodigoVar_actDatos,labelNombreVar_actDatos,labelCodigoVar_actDatos,labelPrecioVar_actDatos,labelMarcaVar_actDatos)
+    command=lambda:Func.eliminar_producto(labelNombreVar_actDatos,labelCodigoVar_actDatos,labelNombreVar_actDatos,labelCodigoVar_actDatos,labelPrecioVar_actDatos,labelMarcaVar_actDatos,buscarCuadro_actDatos)
 )
 actualizarBoton_actDatos.config(bg="#c7695c",fg="#561d14")
 actualizarBoton_actDatos.grid(
@@ -830,12 +830,9 @@ buscarBoton_verStock.config(
     bd=2,
     overrelief="raised"
 )
-        #scroll para la lista
-def ExcelBox(): messagebox.showinfo(title="Exportar",message="Se ha generado un archivo Excel con el informe selecionado")
-    #boton para expotar datos de la venta
 exportarBoton_verStock = Button(verStockFrame, text="Exportar",
     bg=bt1,fg=btfg,
-    command=lambda:[Func.ExportarStock(buscarCuadro_verStock.get(),opcionesStock.get()),ExcelBox]
+    command=lambda:[Func.ExportarStock(buscarCuadro_verStock.get(),opcionesStock.get())]
 ) #, command = funcion para insertar frame
 exportarBoton_verStock.grid(
     row=23,
