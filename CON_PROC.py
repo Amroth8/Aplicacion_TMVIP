@@ -16,7 +16,7 @@ def buscarprod (datos)  :
         if conexion.is_connected() :
             print("Conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "SELECT * FROM producto WHERE nom like '%{}%'"
+            sentencia = "SELECT id_prod,nom,cant,cod_bar,prec,marca FROM producto WHERE nom like '%{}%' and activo=True"
             cursor.execute(sentencia.format(datos))
             resultados = cursor.fetchall()
         else    :
@@ -43,7 +43,7 @@ def buscarprodVenta (datos)  :
         if conexion.is_connected() :
             print("Conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "SELECT p.nom,sl.cant,p.cod_bar,p.prec,p.marca,p.id_prod FROM producto as p, stock_local as sl WHERE p.id_prod=sl.id_prod and p.nom like '%{}%' and sl.cant>0"
+            sentencia = "SELECT p.nom,sl.cant,p.cod_bar,p.prec,p.marca,p.id_prod FROM producto as p, stock_local as sl WHERE p.id_prod=sl.id_prod and p.nom like '%{}%' and p.activo=True and sl.cant>0"
             cursor.execute(sentencia.format(datos))
             resultados = cursor.fetchall()
         else    :
@@ -71,7 +71,7 @@ def buscarprodUnico (nom,codigo)  :
         if conexion.is_connected() :
             print("Conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "SELECT * FROM producto WHERE nom='{}' and cod_bar={}"
+            sentencia = "SELECT id_prod,nom,cant,cod_bar,prec,marca FROM producto WHERE nom='{}' and cod_bar={} and activo=True"
             cursor.execute(sentencia.format(nom,codigo))
             resultados = cursor.fetchall()
             id_prod=resultados[0][0]
@@ -108,7 +108,7 @@ def agregarprod (datos)  :
         if conexion.is_connected() :
             print("Conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "INSERT INTO producto (nom, cant, cod_bar, prec, marca) VALUES ('{0}',{1},{2},{3},'{4}')".format(datos[0], datos[1], datos [2],datos [3],datos[4])
+            sentencia = "INSERT INTO producto (nom, cant, cod_bar, prec, marca,activo) VALUES ('{0}',{1},{2},{3},'{4}',True)".format(datos[0], datos[1], datos [2],datos [3],datos[4])
             cursor.execute(sentencia)
             sentencia = "SELECT id_prod FROM producto WHERE nom='{}' and cod_bar={}"
             cursor.execute(sentencia.format(datos[0],datos [2]))
@@ -144,13 +144,13 @@ def eliminarProd (datos)  :
             cursor.execute(sentencia.format(datos[0],datos[1]))
             resultados = cursor.fetchall()
 
-            sentencia = "DELETE FROM stock_bodega WHERE id_prod={}".format(resultados[0][0])
+            sentencia = "UPDATE stock_bodega SET cant=0 where id_prod={}".format(resultados[0][0])
             cursor.execute(sentencia)
             
-            sentencia = "DELETE FROM stock_local WHERE id_prod={}".format(resultados[0][0])
+            sentencia = "UPDATE stock_local SET cant=0 WHERE id_prod={}".format(resultados[0][0])
             cursor.execute(sentencia)
 
-            sentencia = "DELETE FROM producto WHERE nom='{}' AND cod_bar ={}".format(datos[0],datos[1])
+            sentencia = "UPDATE producto SET activo=False WHERE nom='{}' AND cod_bar ={}".format(datos[0],datos[1])
             cursor.execute(sentencia)
             conexion.commit()
             print("Registro eliminado con exito") 
@@ -198,7 +198,7 @@ def existe (nom,cod)  :
         if conexion.is_connected() :
             print("conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "SELECT * FROM producto WHERE nom='{}' and cod_bar={}"
+            sentencia = "SELECT id_prod,nom,cant,cod_bar,prec,marca FROM producto WHERE nom='{}' and cod_bar={} and activo=True"
             cursor.execute(sentencia.format(nom,cod))
             resultados = cursor.fetchall()
     except Error as ex :
@@ -446,7 +446,7 @@ def stock_producto(nom,cod):
         if conexion.is_connected() :
             print("Conexion exitosa.")
             cursor=conexion.cursor()
-            sentencia = "SELECT * FROM producto WHERE nom='{}' and cod_bar={}"
+            sentencia = "SELECT id_prod,nom,cant,cod_bar,prec,marca FROM producto WHERE nom='{}' and cod_bar={} and activo=True"
             cursor.execute(sentencia.format(nom,cod))
             resultados = cursor.fetchall()
             id_prod=resultados[0][0]

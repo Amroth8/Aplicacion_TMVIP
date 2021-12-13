@@ -2,7 +2,6 @@ from logging import lastResort
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-import os
 import datetime
 import CON_PROC
 import pandas as pd
@@ -372,17 +371,17 @@ def actualizar_stock(cant,opcion,label,nom,cod,opcionLocal):
         label['text']="Marque un destino"
     elif cantCorrecta(_cant,label):
         if opcion == 'Tienda':
-            if opcionLocal=='0':
+            if opcionLocal=='0' and CON_PROC.existe(nom['text'],cod['text']):
                 CON_PROC.actualizarStockLocal(nom['text'],cod['text'],int(_cant))
                 messagebox.showinfo(message='El producto se actualizo con éxito',title='Actualizar Datos')
-            elif opcionLocal=='1':
+            elif opcionLocal=='1'and CON_PROC.existe(nom['text'],cod['text']):
                 if not(CON_PROC.actualizarStockLocalBodega(nom['text'],cod['text'],int(_cant))):
                     label['text']="No hay cantidad suficiente en bodega"
                 else:
                     messagebox.showinfo(message='El producto se actualizo con éxito',title='Actualizar Datos')
             else:
                 label['text']="Marque una opcion"
-        elif opcion == 'Bodega':
+        elif opcion == 'Bodega' and CON_PROC.existe(nom['text'],cod['text']):
             CON_PROC.actualizarStockBodega(nom['text'],cod['text'],int(_cant))
             messagebox.showinfo(message='El producto se actualizo con éxito',title='Actualizar Datos')
 
@@ -531,13 +530,12 @@ def GenerarInformeStock(datosProd, opcion, frame):
             codigo, nombre = separNomCod(datosProd)
             resultado = CON_PROC.stock_producto(nombre, codigo)
             frame_verStock(frame, resultado, opcion)
-
     elif opcion == 'Bodega':
-        sentecia = "select p.nom,p.cod_bar,p.prec,p.marca,sb.cant,b.direcb from producto as p, stock_bodega as sb, bodega as b where sb.id_bod=b.id_bod and b.id_bod=1 and sb.id_prod=p.id_prod;"
+        sentecia = "select p.nom,p.cod_bar,p.prec,p.marca,sb.cant,b.direcb from producto as p, stock_bodega as sb, bodega as b where sb.id_bod=b.id_bod and b.id_bod=1 and sb.id_prod=p.id_prod and p.activo=True;"
         resultado = CON_PROC.stocks_loc_bod(sentecia)
         frame_verStock(frame, resultado, opcion)
     elif opcion == 'Tienda':
-        sentecia = "select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod;"
+        sentecia = "select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod and p.activo=True;"
         resultado = CON_PROC.stocks_loc_bod(sentecia)
         frame_verStock(frame, resultado, opcion)
 
@@ -579,18 +577,21 @@ def ExportarStock(datosProd,opcion):
         if datosProd!='':
             codigo,nombre=separNomCod(datosProd)
             resultado=CON_PROC.stock_producto(nombre,codigo)
-            nombreAr='Stock General '+nombre+' ('+str(codigo)+').xlsx'
-            crearExcelProducto(resultado,nombreAr)
+            if resultado!=[]:
+                nombreAr='Stock General '+nombre+' ('+str(codigo)+').xlsx'
+                crearExcelProducto(resultado,nombreAr)
     elif opcion=='Bodega':
-        sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sb.cant,b.direcb from producto as p, stock_bodega as sb, bodega as b where sb.id_bod=b.id_bod and b.id_bod=1 and sb.id_prod=p.id_prod;"
+        sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sb.cant,b.direcb from producto as p, stock_bodega as sb, bodega as b where sb.id_bod=b.id_bod and b.id_bod=1 and sb.id_prod=p.id_prod and p.activo=True;"
         resultado=CON_PROC.stocks_loc_bod(sentecia)
         nombreAr='Stock Bodega.xlsx'
-        crearExcel(resultado,nombreAr)
+        if resultado!=[]:
+            crearExcel(resultado,nombreAr)
     elif opcion=='Tienda':
-        sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod;"
+        sentecia="select p.nom,p.cod_bar,p.prec,p.marca,sl.cant,l.nom from producto as p, stock_local as sl, locall as l where sl.id_loc=l.id_loc and l.id_loc=1 and sl.id_prod=p.id_prod and p.activo=True;"
         resultado=CON_PROC.stocks_loc_bod(sentecia)
         nombreAr='Stock Tienda.xlsx'
-        crearExcel(resultado,nombreAr)
+        if resultado!=[]:
+            crearExcel(resultado,nombreAr)
 
 
 

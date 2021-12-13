@@ -9,6 +9,7 @@ CREATE TABLE Producto (
     cod_bar bigint,
     prec int,
     marca varchar(1000),
+activo boolean,
 primary key (id_prod)
 );
 

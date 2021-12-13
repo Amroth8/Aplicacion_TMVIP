@@ -1,9 +1,5 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import messagebox
-from PIL import Image
-from PIL import ImageTk
-from CON_PROC import eliminarProd
 import Func
 
 # Colores
